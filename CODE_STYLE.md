@@ -6,39 +6,19 @@ This document defines the coding style for this C++ project. The goal is **reada
 
 ## Table of Contents
 
+- [Background](#background)
+  - [Goals of the Style Guide](#goals-of-the-style-guide)
 - [C++ Version](#c-version)
-- [Formatting](#formatting)
-  - [Line Length](#line-length)
-  - [Indentation](#indentation)
-  - [Horizontal Whitespace](#horizontal-whitespace)
-  - [Brackets](#brackets)
-  - [Parentheses](#parentheses)
-  - [Blocks](#blocks)
-  - [Vertical whitespace](#vertical-whitespace)
-  - [Alignment](#alignment)
-  - [Non-ASCII Characters](#non-ascii-characters)
-  - [Function Declarations and Definitions](#function-declarations-and-definitions)
-  - [Lambda Expressions (Formatting)](#lambda-expressions-formatting)
-  - [Floating-point Literals](#floating-point-literals)
-  - [Braced Initializer List Format](#braced-initializer-list-format)
-  - [Conditionals](#conditionals)
-  - [Switch Statements](#switch-statements)
-  - [Pointer and Reference Expressions](#pointer-and-reference-expressions)
-  - [Return Values](#return-values)
-  - [Variable and Array Initialization](#variable-and-array-initialization)
-  - [Preprocessor Directives](#preprocessor-directives)
-  - [Class Format](#class-format)
-  - [Namespace Formatting](#namespace-formatting)
 - [Header Files](#header-files)
   - [Self-contained Headers](#self-contained-headers)
   - [The #define Guard](#the-define-guard)
   - [Include What You Use](#include-what-you-use)
   - [Forward Declarations](#forward-declarations)
   - [Defining Functions in Header Files](#defining-functions-in-header-files)
+  - [Names and Order of Includes](#names-and-order-of-includes)
 - [Scoping](#scoping)
   - [Namespaces](#namespaces)
   - [Internal Linkage](#internal-linkage)
-  - [Nonmember, Static Member, and Global Functions](#nonmember-static-member-and-global-functions)
   - [Local Variables](#local-variables)
   - [Static and Global Variables](#static-and-global-variables)
   - [thread_local Variables](#thread_local-variables)
@@ -58,7 +38,9 @@ This document defines the coding style for this C++ project. The goal is **reada
   - [Function Overloading](#function-overloading)
   - [Default Arguments](#default-arguments)
   - [Trailing Return Type Syntax](#trailing-return-type-syntax)
+- [Tooling](#tooling)
 - [Other C++ Features](#other-c-features)
+  - [Ownership and Smart Pointers](#ownership-and-smart-pointers)
   - [Rvalue References](#rvalue-references)
   - [Friends](#friends)
   - [Exceptions](#exceptions)
@@ -68,1081 +50,246 @@ This document defines the coding style for this C++ project. The goal is **reada
   - [Streams](#streams)
   - [Preincrement and Predecrement](#preincrement-and-predecrement)
   - [Use of const](#use-of-const)
-  - [Use of constexpr](#use-of-constexpr)
+    - [Where to put the const](#where-to-put-the-const)
+  - [Use of constexpr, constinit, and consteval](#use-of-constexpr-constinit-and-consteval)
   - [Integer Types](#integer-types)
-  - [64-bit Portability](#64-bit-portability)
+    - [On Unsigned Integers](#on-unsigned-integers)
+  - [Floating-Point Types](#floating-point-types)
+  - [Architecture Portability](#architecture-portability)
   - [Preprocessor Macros](#preprocessor-macros)
   - [0 and nullptr/NULL](#0-and-nullptrnull)
   - [sizeof](#sizeof)
-  - [Type Deduction](#type-deduction)
+  - [Type Deduction (including auto)](#type-deduction-including-auto)
+    - [Function template argument deduction](#function-template-argument-deduction)
+    - [Local variable type deduction](#local-variable-type-deduction)
+    - [Return type deduction](#return-type-deduction)
+    - [Function parameter type deduction](#function-parameter-type-deduction)
+    - [Lambda init captures](#lambda-init-captures)
+    - [Structured bindings](#structured-bindings)
   - [Class Template Argument Deduction](#class-template-argument-deduction)
   - [Designated Initializers](#designated-initializers)
   - [Lambda Expressions](#lambda-expressions)
   - [Template Metaprogramming](#template-metaprogramming)
+  - [Concepts and Constraints](#concepts-and-constraints)
+  - [C++20 modules](#c20-modules)
+  - [Coroutines](#coroutines)
+  - [Disallowed standard library features](#disallowed-standard-library-features)
+  - [Third-party Libraries](#third-party-libraries)
   - [Boost](#boost)
   - [std::hash](#stdhash)
   - [Nonstandard Extensions](#nonstandard-extensions)
   - [Aliases](#aliases)
+  - [Switch Statements](#switch-statements)
 - [Inclusive Language](#inclusive-language)
 - [Naming](#naming)
-  - [General Naming Rules](#general-naming-rules)
+  - [Choosing Names](#choosing-names)
   - [File Names](#file-names)
   - [Type Names](#type-names)
+  - [Concept Names](#concept-names)
   - [Variable Names](#variable-names)
+    - [Common Variable names](#common-variable-names)
+    - [Class Data Members](#class-data-members)
+    - [Struct Data Members](#struct-data-members)
   - [Constant Names](#constant-names)
   - [Function Names](#function-names)
   - [Namespace Names](#namespace-names)
   - [Enumerator Names](#enumerator-names)
+  - [Template Parameter Names](#template-parameter-names)
   - [Macro Names](#macro-names)
+  - [Aliases](#aliases-1)
   - [Exceptions to Naming Rules](#exceptions-to-naming-rules)
 - [Comments](#comments)
   - [Comment Style](#comment-style)
   - [File Comments](#file-comments)
-  - [Class Comments](#class-comments)
+    - [Legal Notice and Author Line](#legal-notice-and-author-line)
+  - [Struct and Class Comments](#struct-and-class-comments)
+    - [Class Comments](#class-comments)
   - [Function Comments](#function-comments)
+    - [Function Declarations](#function-declarations)
+    - [Function Definitions](#function-definitions)
   - [Variable Comments](#variable-comments)
+    - [Class Data Members](#class-data-members-1)
+    - [Global Variables](#global-variables)
   - [Implementation Comments](#implementation-comments)
+    - [Explanatory Comments](#explanatory-comments)
+    - [Function Argument Comments](#function-argument-comments)
+    - [Don'ts](#donts)
   - [Punctuation, Spelling, and Grammar](#punctuation-spelling-and-grammar)
   - [TODO Comments](#todo-comments)
   - [Deprecation Comments](#deprecation-comments)
+- [Formatting](#formatting)
+  - [Line Length](#line-length)
+  - [Non-ASCII Characters](#non-ascii-characters)
+  - [Spaces vs. Tabs](#spaces-vs-tabs)
+  - [Function Declarations and Definitions](#function-declarations-and-definitions)
+  - [Lambda Expressions](#lambda-expressions-1)
+  - [String Literals](#string-literals)
+  - [Floating-point Literals](#floating-point-literals)
+  - [Function Calls](#function-calls)
+  - [Braced Initializer List Format](#braced-initializer-list-format)
+  - [Looping and branching statements](#looping-and-branching-statements)
+  - [Pointer and Reference Expressions and Types](#pointer-and-reference-expressions-and-types)
+  - [Boolean Expressions](#boolean-expressions)
+  - [Return Values](#return-values)
+  - [Variable and Array Initialization](#variable-and-array-initialization)
+  - [Preprocessor Directives](#preprocessor-directives)
+  - [Class Format](#class-format)
+  - [Constructor Initializer Lists](#constructor-initializer-lists)
+  - [Namespace Formatting](#namespace-formatting)
+  - [Horizontal Whitespace](#horizontal-whitespace)
+    - [General](#general)
+    - [Loops and Conditionals](#loops-and-conditionals)
+    - [Operators](#operators)
+    - [Templates and Casts](#templates-and-casts)
+  - [Vertical Whitespace](#vertical-whitespace)
 - [Exceptions to the Rules](#exceptions-to-the-rules)
   - [Existing Non-conformant Code](#existing-non-conformant-code)
-- [Tooling](#tooling)
+  - [Windows Code](#windows-code)
 - [References](#references)
+
+---
+
+## Background
+
+- C++ is powerful but complex; style rules manage that complexity.
+- Style covers more than formatting: naming, scoping, ownership, and API design.
+- This guide assumes familiarity with C++; it is not a C++ tutorial.
+
+### Goals of the Style Guide
+
+- Optimize for the **reader**, not the writer.
+- Be consistent within this codebase and with `.clang-format`.
+- Avoid surprising or hard-to-maintain constructs.
 
 ---
 
 ## C++ Version
 
-- Preferred C++ version C++20.
-
----
-
-## Formatting
-
-### Line Length
-
-- Max **100 characters** per line
-
-```cpp
-// OK
-log_info("parameter1: %d parameter2: %d parameter3: %d parameter4: %d", parameter1,
-    parameter2, parameter3, parameter4);
-
-// Wrong
-log_info("parameter1: %d parameter2: %d parameter3: %d parameter4: %d", parameter1, parameter2, parameter3, parameter4);
-```
-
-- Constant strings longer than one line should be closed on each line by a quote and opened again on the next line.
-```cpp
-// OK
-log_info("This is a long string that we want to print and is more than 100 chars long so we need "
-         "to split it");
-
-// Wrong
-log_info("This is a long string that we want to print and is more than 100 chars long so we need \
-         to split it");
-```
-
-### Indentation
-
-- Indentation is 4 spaces, no tabs
-- Single indentation after breaking up line.
-
-```cpp
-// OK
-if (parameter1 != nullptr && parameter2 != nullptr && parameter3 != nullptr &&
-    parameter4 != nullptr) {
-    return 0;
-}
-
-// OK
-log_info("parameter1: %d parameter2: %d parameter3: %d parameter4: %d", parameter1,
-    parameter2, parameter3, parameter4);
-
-// OK
-void func(long int parameter1, const char *parameter2, double parameter3, int *parameter4,
-    int parameter5);
-
-// Wrong
-if (parameter1 != nullptr && parameter2 != nullptr && parameter3 != nullptr &&
-        parameter4 != nullptr) {
-    return 0;
-}
-
-// Wrong
-void func(long int parameter1, const char *parameter2, double parameter3, int *parameter4,
-          int parameter5);
-
-// Wrong
-log_info("parameter1: %d parameter2: %d parameter3: %d parameter4: %d", parameter1,
-         parameter2, parameter3, parameter4);
-
-```
-
-- Indentation is required for every opening bracket.
-```cpp
-// OK
-if (a) {
-    do_a();
-} else {
-    do_b();
-    if (c) {
-        do_c();
-    }
-}
-```
-
-### Horizontal Whitespace
-
-- Single space between `if/while/for/do` keyword and opening parenthesis.
-```cpp
-// OK
-if (condition)
-while (condition)
-for (init; condition; step)
-do {} while (condition)
-
-// Wrong
-if(condition)
-while(condition)
-for(init;condition;step)
-do {} while(condition)
-```
-
-- Single space before and after an assignment, binary and ternary operators (=  +  -  <  >  *  /  %  |  &  ^  <=  >=  ==  !=  ?  :).
-```cpp
-int32_t a;
-
-a = 3 + 4;              // OK
-for (a = 0; a < 5; a++) // OK
-bits |= BIT5;           // OK
-
-a=3+4;                  // Wrong
-a = 3+4;                // Wrong
-for (a=0;a<5;a++)       // Wrong
-bits|=BIT5;             // Wrong
-```
-
-- No space after unary operators (&  *  +  -  ~  !).
-- No space around the . and -> structure/class member operators.
-- No space before the postfix increment / decrement unary operators and after the prefix increment / decrement unary operators.
-```cpp
-res = !x;               // OK
-ptr->x;                 // OK
-++i;                    // OK
-
-res = ! x;              // Wrong
-ptr -> x;               // Wrong
-++ i;                   // Wrong
-```
-
-- No space between function name and opening parenthesis.
-- No space between opening parenthesis and first parameter.
-- Single space after every comma.
-```cpp
-int32_t a = sum(4, 3);              // OK
-
-int32_t a = sum (4, 3);             // Wrong
-int32_t a = sum( 4, 3 );            // Wrong
-int32_t a = sum(4,3);               // Wrong
-```
-- No trailing spaces.
-
-### Brackets
-
-- Opening curly bracket is always at the same line as reserved keyword (`for`, `while`, `do`, `switch`, `if`, ...).
-```cpp
-size_t i;
-
-for (i = 0; i < 5; i++) {           // OK
-}
-
-for (i = 0; i < 5; i++){            // Wrong
-}
-
-for (i = 0; i < 5; i++)             // Wrong
-{
-}
-```
-
-- `if/for/while` statement should have brackets if it takes more than one line.
-```cpp
-// OK
-if (c) {
-    for (int i = 0; i < 10; i++)
-        do_a();
-}
-
-// OK
-if (a)
-    do_a();
-
-// OK
-if (c) {
-    a = 12;
-} else {
-    for (int i = 0; i < 10; i++)
-        do_a();    
-}
-
-// Wrong
-if (c)
-    for (int i = 0; i < 10; i++)
-        do_a();
-
-// Wrong
-if (c)
-    a = 12;
-else {
-    for (int i = 0; i < 10; i++)
-        do_a();    
-}
-```
-
-- In case of `if` or `if-else-if` statement, `else` must be in the same line as closing bracket of first statement.
-```cpp
-// OK
-if (a) {
-} else if (b) {
-} else {
-}
-
-// Wrong
-if (a) {
-}
-else {
-}
-
-// Wrong
-if (a) {
-}
-else
-{
-}
-```
-
-- In case of `do-while` statement, `while` part must be in the same line as closing bracket of `do` part.
-```cpp
-// OK
-do {
-    int32_t a;
-    a = do_a();
-    do_b(a);
-} while (check());
-
-// Wrong
-do
-{
-// logic
-} while (check());
-
-// Wrong
-do {
-// logic
-}
-while (check());
-```
-
-- Then part of `if` statement should be in a separate line.
-```cpp
-// OK
-if (fd) {
-    fclose(fp);
-}
-
-// Wrong
-if (fd) fclose(fp);
-```
-
-- Opening curly bracket for function should be on the same level as closing.
-```cpp
-// OK
-void my_func()
-{
-}
-
-// Wrong
-void my_func() {
-}
-```
-
-- for and while without a statement should be in one-line with empty brackets.
-```cpp
-// OK
-for (i = 0; i < *p; i++) {}
-
-// Wrong
-for (i = 0; i < *p; i++);
-```
-
-- Opening curly bracket for initializations is always at the same line.
-```cpp
-// OK
-Node node = { 1, nullptr };
-
-// OK
-Node node = {
-    1,
-    nullptr,
-};
-
-// Wrong
-Node node =
-{
-    1,
-    nullptr,
-};
-```
-
-
-### Parentheses
-
-- Do not overuse parentheses.
-```cpp
-// OK
-if ((a & b) > 0 && c > 0 && d) {
-}
-
-// Wrong
-if ((a & b) > 0 && (c > 0) && (d)) {
-}
-
-// Wrong
-if ((my_func(a))) {
-}
-
-// Wrong
-ptr = &(p->next);
-```
-
-- Use parentheses when assigning in a condition expression of if/for/while.
-```cpp
-// OK
-for (i = 0; (ret = my_func()); i++)
-
-// Wrong
-for (i = 0; ret = my_func(); i++)
-```
-
-- Use sizeof with parentheses.
-```cpp
-// OK
-sizeof(a)
-
-// Wrong
-sizeof a
-```
-
-### Blocks
-
-- Avoid many nested blocks.
-```cpp
-// OK
-while (condition1) {
-    if (!condition2) {
-        continue;
-    }
-
-    if (condition3 && condition4) {
-        x = 10;
-    }
-}
-
-// Wrong
-while (condition1) {
-    if (condition2) {
-        if (condition3) {
-            if (condition4) {
-                x = 10;
-            }
-        }
-    }
-}
-```
-
-- Do not use `else` after return in `if` block.
-```cpp
-// OK
-if (condition) {
-    return;
-}
-
-// else
-
-// Wrong
-if (condition) {
-    return;
-} else {
-}
-```
-
-### Vertical whitespace
-
-- One blank line between sections, functions etc.
-```cpp
-// OK
-void func()
-{
-    printf("code block 1");
-
-    printf("code block 2");
-}
-
-// Wrong
-void func()
-{
-    printf("code block 1");
-
-
-    printf("code block 2");
-}
-```
-
-- No blank line at the beginning or end of function.
-
-### Alignment
-
-- Do not align variable assignments, function arguments or comments etc.
-```cpp
-// OK
-int a = 1;
-int abc = 2;
-
-// Wrong
-int a   = 1;
-int abc = 2;
-```
-
-### Non-ASCII Characters
-
-- Source files must be UTF-8; avoid non-ASCII in identifiers and comments unless necessary (e.g., units)
-
-```cpp
-// OK
-constexpr double micros_per_second = 1e6; // µs
-```
-
-### Function Declarations and Definitions
-
-- Return type on the same line as function name
-
-```cpp
-// OK
-void process() {
-}
-
-// Wrong
-void
-process() {
-}
-```
-
-- When function returns pointer or reference, align asterisk to function name.
-```cpp
-// OK
-const char *my_func();
-
-// Wrong
-const char* my_func();
-```
-
-- Do not align function prototypes.
-```cpp
-// OK
-void set(int32_t a);
-const char *get();
-
-// Wrong
-void        set(int32_t a);
-const char *get();
-```
-
-- Do not align function parameters.
-```cpp
-// OK
-void my_function(int param1, char *param2, int param3, bool param4,
-    bool param5);
-
-// Wrong
-void my_function( int param1,
-                  char *param2,
-                  int param3,
-                  bool param4,
-                  bool param5 );
-```
-
-- Function should have input parameters first and then output parameters.
-```cpp
-// OK
-void my_func(int in, int *out);
-
-// Wrong
-void my_fuc(int *out, int in);
-```
-
-- Function without parameters should be declared without `void` type unless need compatibility with C.
-```c
-// OK
-void my_func();
-
-// OK
-extern "C" {
-void my_func(void);
-}
-```
-
-- Forward declaration in the source file should only be added if used before implemented.
-```cpp
-// OK
-void func();
-
-int main(void)
-{
-    func();
-    return 0;
-}
-
-void my_func()
-{
-}
-
-// Wrong
-void func();
-
-void my_func()
-{
-}
-
-int main()
-{
-    func();
-    return 0;
-}
-```
-
-### Lambda Expressions (Formatting)
-
-- Short lambdas inline; multi-line lambdas indented like a function body
-
-```cpp
-auto f = [](int x) { return x * 2; };
-
-auto g = [&](const Order& o) {
-    validate(o);
-    submit(o);
-};
-```
-
-### Floating-point Literals
-
-- Always include a decimal point to make the type explicit
-
-```cpp
-double ratio = 1.0 / 3.0;
-float scale = 0.5f;
-```
-
-### Braced Initializer List Format
-
-- Short lists inline; longer lists one element per line
-
-```cpp
-std::vector<int> v = {1, 2, 3};
-
-std::vector<std::string> names = {
-    "alice",
-    "bob",
-    "charlie",
-};
-```
-
-### Conditionals
-
-- K&R brace style
-
-```cpp
-if (condition) {
-    do_something();
-} else {
-    do_other();
-}
-```
-
-- Compare variable against zero, except if it is treated as `boolean` type.
-- Do not compare `boolean-treated` variables against zero/one/false/true. Use NOT (`!`) instead.
-- Compare pointers against `NULL` value.
-- Do not place constant before variable in comparison statement.
-```cpp
-size_t length = 5;      // Counter variable
-uint8_t is_ok = 0;      // Boolean-treated variable
-void *ptr = NULL;       // Pointer variable
-std::shared_ptr<int> p; // Smart pointer
-std::error_code ec      // Error code object
-
-if (length > 0)     // OK, length is treated as counter variable containing multi values, not only 0 or 1
-if (length == 0)    // OK, length is treated as counter variable containing multi values, not only 0 or 1
-if (length)         // Wrong, length is not treated as boolean
-if (0 == length)    // Wrong, hard to read and compiler generates warning in case of mistake length = 0
-
-if (is_ok)          // OK, variable is treated as boolean
-if (!is_ok)         // OK
-if (is_ok == 1)     // Wrong
-if (is_ok == false) // Wrong, use ! for negative check
-
-if (ptr == NULL)    // OK
-if (!ptr)           // Wrong
-
-if (p)              // OK
-
-if (!ec)            // OK
-```
-
-### Switch Statements
-
-- Always include `default` statement.
-
-```cpp
-// OK
-switch (var) {
-case 0:
-    do_job();
-    break;
-default:
-    break;
-}
-
-// Wrong, default is missing
-switch (var) {
-case 0:
-    do_job();
-    break;
-}
-```
-- Use `[[fallthrough]]` to mark intentional fall-through
-- Do not add *indent* for `case` statement.
-- Use *single indent* for `break` statement in each `case` or `default` statement.
-- Do not add space before `:`. If there is one line case, use one space after `:`.
-```cpp
-// OK
-switch (c) {
-case 0:
-    do_a();
-    break;
-case 1:
-    do_b();
-    break;
-default:
-    break;
-}
-
-// OK
-switch (c) {
-case 0: do_a(); break;
-case 1: do_b(); break;
-default: break;
-}
-
-// Wrong
-switch (c) {
-    case 0:
-        do_a();
-        break;
-    case 1:
-        do_b();
-        break;
-    default:
-        break;
-}
-```
-
-- If local variables are required inside `case`, use curly brackets and put `break` statement inside.
-- Put opening curly bracket in the same line as `case` statement.
-
-```cpp
-// OK
-switch (n) {
-case 0: {
-    int32_t a, b;
-    char c;
-
-    a = 5;
-
-    break;
-}
-}
-
-// Wrong
-switch (n) {
-case 0:
-    {
-        int32_t a;
-        break;
-    }
-}
-
-// Wrong, break shall be inside
-switch (n) {
-case 0: {
-    int32_t a;
-}
-    break;
-}
-```
-
-### Pointer and Reference Expressions
-
-- Attach `*` and `&` to the the variable name
-
-```cpp
-// OK
-int *ptr;
-const std::string &ref;
-
-// Wrong
-int* ptr;
-const std::string& ref;
-```
-
-### Return Values
-
-- No parentheses around return values unless needed for clarity
-
-```cpp
-// OK
-return result;
-return (a > b) ? a : b; // parens OK for ternary
-
-// Wrong
-return (result);
-```
-
-- In functions returning a pointer, return nullptr on fail.
-
-- In functions that only have success/fail, use 0 for success and -1 for failure.
-
-- In functions with many error reasons, use negative values for the reason.
-
-- In functions where negative return value is valid, add another parameter to return the value.
-
-- In functions that return boolean values (is_big, is_directory, is_download) return false or true.
-
-```cpp
-// OK
-int my_func()
-{
-    if (error) {
-        return -1;
-    }
-
-    return 0;
-}
-
-bool is_done()
-{
-    if (done) {
-        return true;
-    }
-
-    return false;
-}
-
-void *my_func()
-{
-    return is_ok ? ptr : nullptr;
-}
-
-// Wrong
-bool my_func()
-{
-    if (error) {
-        return false;
-    }
-
-    return true;
-}
-```
-
-- Do not call return at the end of a function returning void.
-```cpp
-// OK
-void my_func()
-{
-}
-
-// Wrong
-void my_func()
-{
-    return;
-}
-```
-
-- Use “exit early” strategy for handling errors or checking preconditions.
-```cpp
-// OK
-void my_func()
-{
-    if (!condition) {
-        return;
-    }
-
-    if (func1() < 0) {
-        return;
-    }
-
-    if (func2() < 0) {
-        return;
-    }
-
-    x = 10;
-}
-
-// Wrong
-void my_func()
-{
-    if (condition) {
-        if (func1() == 0) {
-            if (func2() == 0) {
-                x = 10;
-            }
-        }
-    }
-}
-```
-
-### Variable and Array Initialization
-
-- Use brace initialization `{}` to prevent narrowing conversions
-
-```cpp
-int x { 42 };
-std::vector<int> v { 1, 2, 3 };
-```
-
-### Preprocessor Directives
-
-- All macros must be fully uppercase, with optional underscore `_` character.
-- Use the same spacing as for functions.
-```cpp
-// OK
-#define SQUARE(x) ((x) * (x))
-
-// Wrong
-#define square(x) ((x) * (x))
-#define SQUARE( x ) (( x ) * ( x ))
-```
-
-- Always protect input parameters with parentheses.
-```cpp
-// OK
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-
-// Wrong
-#define MIN(x, y) x < y ? x : y
-```
-
-- Always protect final macro evaluation with parentheses.
-```cpp
-// OK
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-#define SUM(x, y) ((x) + (y))
-
-// Wrong
-#define MIN(x, y) (x) < (y) ? (x) : (y)
-#define SUM(x, y) (x) + (y)
-```
-
-- When macro uses multiple statements, protect these using `do {} while (0)` statement. This allows to use them inside if-else statements.
-```cpp
-// OK
-#define DO_A_AND_B() \ do {\ do_a();\ do_b();\ } while (0)
-
-
-// Wrong
-#define DO_A_AND_B() \ {\ do_a();\ do_b();\ }
-```
-
-- Avoid using `#ifdef` or `#ifndef`. Use `defined()` or `!defined()` instead for consistency.
-```cpp
-// OK
-#ifdef defined(XYZ)
-// do something
-#endif // defined(XYZ)
-
-// Wrong
-#ifdef XYZ
-// do something
-#endif // XYZ
-```
-
-- Always document `if/elif/else/endif` statements.
-```cpp
-// OK
-#if defined(XYZ)
-// Do if XYZ defined
-#else // defined(XYZ)
-// Do if XYZ not defined
-#endif // !defined(XYZ)
-
-// Wrong
-#if defined(XYZ)
-// Do if XYZ defined
-#else
-// Do if XYZ not defined
-#endif
-```
-
-- Do not indent sub statements inside `#if` statement
-```cpp
-// OK
-#if defined(XYZ)
-#if defined(ABC)
-// do when ABC defined
-#endif // defined(ABC)
-#else // defined(XYZ)
-// Do when XYZ not defined
-#endif // !defined(XYZ)
-
-// Wrong
-#if defined(XYZ)
-    #if defined(ABC)
-        // do when ABC defined
-    #endif // defined(ABC)
-#else // defined(XYZ)
-    // Do when XYZ not defined
-#endif // !defined(XYZ)
-```
-
-### Class Format
-
-- Access specifiers at the same indentation as `class`.
-- Members indented 4 spaces.
-
-```cpp
-class Foo {
-public:
-    explicit Foo(int id);
-    [[nodiscard]] int get_id() const noexcept;
-
-protected:
-    int set_id();
-
-private:
-    int id;
-};
-```
-
-### Namespace Formatting
-
-- No extra indentation inside namespaces; label closing braces
-
-```cpp
-namespace myproject {
-
-class Bar {};
-
-} // namespace myproject
-```
+- Target **C++20**.
+- Avoid non-standard language extensions unless approved; see [Nonstandard Extensions](#nonstandard-extensions).
 
 ---
 
 ## Header Files
 
+- Every `.cpp` file should have a matching `.h` file when it defines reusable APIs (tests and tiny `main()` files are exceptions).
+- Use `*.h` and `*.cpp` extensions.
+- Use `snake_case` for file names.
+- Every file must include the project license header.
+
 ### Self-contained Headers
 
-- Always use `<` and `>` for C/C++ Standard Library include files, e.g. `#include <iostream>`
-- Always use `""` for custom libraries, eg. `#include "my_library.h"`
-- Every file (*header* or *source*) must include license.
-- Use the same license as already used by project/library.
-- Header file must include guard `#ifndef`.
-- Include external header files in following order: component header, application headers, system headers.
-```cpp
-// foo.c
+- Headers must compile on their own — include everything they need.
+- Use `#include <...>` for standard/system headers; `#include "..."` for project and third-party headers.
+- Expose only public API from headers; keep implementation details in `.cpp` files.
+- Do not use `.inl.h` split headers; put template/inline definitions in the header when required.
 
-#include "foo.h"        // 1. own header
-
-#include "bar.h"        // 2. project headers
-
-#include <boost/system/error_code.hpp>  // 3. third-party
-
-#include <iostream>     // 4. standard library
-
-#include <sys/ioctl.h>  // 5. system / OS headers
-
-```
-- Header file must include only every other header file in order to compile correctly, but not more (.cpp should include the rest if required).
-- Header file must only expose module public variables/types/functions.
-- Header files must be self-contained, i.e., they must be able to compile without relying on another include line to come before them.
-- Use lowercase characters with underscores for file names.
-- Use *.h and *.cpp for file extensions.
-
-- Header file example (no license for sake of an example).
 ```cpp
 // License comes here
-#ifndef TEMPLATE_HDR_H
-#define TEMPLATE_HDR_H
+#ifndef NETWORK_SOCKET_H
+#define NETWORK_SOCKET_H
 
-// Include headers
+#include <cstdint>
+#include <string>
 
-// File content here
+namespace network {
 
-#endif // TEMPLATE_HDR_H
+class Socket {
+public:
+    explicit Socket(int fd);
+    int send(const std::string &data);
+
+private:
+    int fd;
+};
+
+} // namespace network
+
+#endif // NETWORK_SOCKET_H
 ```
 
 ### The #define Guard
 
-- All header files should have #define guards to prevent multiple inclusion. The format of the symbol name should be <PROJECT>_<PATH>_<FILE>_H.
+- Every header uses `#ifndef` / `#define` / `#endif` guards.
+- Guard name is the file path in uppercase: `PATH_TO_FILE_H`.
 
 ```cpp
 #ifndef FOO_BAR_BAZ_H
 #define FOO_BAR_BAZ_H
-
-...
-
-#endif  // FOO_BAR_BAZ_H
+// ...
+#endif // FOO_BAR_BAZ_H
 ```
 
 ### Include What You Use
 
-- Include every header whose symbols you directly use
-- Do not rely on a symbol being available through another header's includes
+- Include headers for every symbol you use directly; do not rely on transitive includes.
 
 ```cpp
-// BAD: relying on <vector> being pulled in by <algorithm>
-#include <algorithm>
-std::vector<int> v; // might break if <algorithm> stops including <vector>
-
-// GOOD
-#include <algorithm>
+// OK
 #include <vector>
+std::vector<int> v;
+
+// Wrong — <vector> not included
 std::vector<int> v;
 ```
 
 ### Forward Declarations
 
-- Prefer forward declarations over includes in headers to reduce compile-time coupling
-- Use full includes in `.cpp` files
+- Prefer `#include` over forward declarations when practical.
+- Do not forward-declare symbols you do not own.
+- Avoid forward declarations that hide dependencies or break when APIs evolve.
 
 ```cpp
-// In foo.hpp — forward declare instead of including bar.hpp
-class Bar;
+// Prefer
+#include "other_module.h"
 
-class Foo {
-    Bar* bar;
-};
+// Only when include cost is high and dependency is stable
+class ExpensiveType;
+void register_type(const ExpensiveType &value);
 ```
 
 ### Defining Functions in Header Files
 
-- Only define functions in headers if they are `inline`, `constexpr`, or templates
-- Avoid non-trivial function bodies in headers; put them in `.cpp`
+- Define functions in headers only when `inline`, `constexpr`, or templates require it.
+- Keep public inline bodies short (roughly ≤10 lines); put larger bodies in `.cpp` or private sections.
 
 ```cpp
 // OK in header
-inline int square(int x) { return x * x; }
+inline int square(int x)
+{
+    return x * x;
+}
 
-template <typename T>
-T clamp(T val, T lo, T hi) { return std::max(lo, std::min(val, hi)); }
+template<typename T>
+T clamp(T val, T lo, T hi)
+{
+    return std::max(lo, std::min(val, hi));
+}
+```
+
+### Names and Order of Includes
+
+**Project order** (overrides Google):
+
+1. Own header (in `.cpp` files)
+2. Application/project headers
+3. Third-party headers
+4. C++ standard library headers
+5. C/system headers
+
+Separate groups with a blank line; sort alphabetically within each group.
+
+```cpp
+#include "foo.h"
+
+#include "bar.h"
+
+#include <boost/system/error_code.hpp>
+
+#include <iostream>
+#include <vector>
+
+#include <sys/ioctl.h>
 ```
 
 ---
@@ -1151,86 +298,158 @@ T clamp(T val, T lo, T hi) { return std::max(lo, std::min(val, hi)); }
 
 ### Namespaces
 
-- Wrap all project code in a named namespace; avoid `using namespace` in headers
-- Close braces with a comment
+- Place project code in named namespaces.
+- Use unique names based on the project name and possibly its path.
+- Do not use `using namespace` in headers.
+- Do not use inline namespaces.
+- Close namespaces with a comment.
+- Wrap the entire source file after includes, forward declarations of classes from other namespaces and defines.
+- Prefer single-line nested namespaces. 
 
 ```cpp
-namespace myproject {
+// my_component.h
+#include <iostream>
 
-class Foo {};
+class my_project::other_component;
 
-} // namespace myproject
+namespace my_project::my_component {
+
+// All declarations are within the namespace scope.
+class MyComponent {
+public:
+    void foo();
+};
+
+} // namespace my_project::my_component
+
+// my_component.cpp
+#include "my_component.h"
+
+#include <vector>
+
+namespace my_project::my_component {
+
+// Definition of functions is within scope of the namespace.
+void MyComponent::foo()
+{
+    ...
+}
+
+} // namespace my_project::my_component
 ```
 
 ### Internal Linkage
 
-- Use `static` or anonymous namespaces for function and variables that do not need to be referenced outside of file.
+- Use anonymous namespaces or `static` in `.cpp` for file-local symbols.
+- Do not use anonymous namespaces in headers.
 
 ```cpp
-// OK
-static int var = INIT;
-
-// OK
-static int my_func()
-{
-    return var;
-}
-
-// OK
 namespace {
 void helper() {}
-}
-
-// Wrong, used only in this file
-int var = INIT;
-
-// Wrong, used only in this file
-int my_func()
-{
-    return var;
-}
-
-```
-
-### Nonmember, Static Member, and Global Functions
-
-- Prefer free functions over static member functions when they don't need class internals
-- Group related free functions in a namespace
-
-```cpp
-namespace math {
-double lerp(double a, double b, double t) noexcept;
-} // namespace math
+} // namespace
 ```
 
 ### Local Variables
 
-- Declare variables in the narrowest scope possible, as close to first use as possible
+- Declare variables in the narrowest scope, as close to first use as possible.
+- Initialize at declaration.
 
 ```cpp
-int count = 0;
-for (const auto &order : orders) {
-    ++count;
+// OK
+int jobs = num_jobs();
+func(jobs);
+
+for (int i = 0; i < jobs; ++i) {
+}
+
+// Wrong
+int jobs;
+int i;
+...
+func(jobs);
+for (i = 0; i < jobs; ++i) {
 }
 ```
 
 ### Static and Global Variables
 
-- Avoid mutable global state; prefer `constexpr` constants
-- Upper snake case for constants
+- Avoid any dynamic initialization of a global/static object that depends on another non-trivial global/static object in a different translation unit.
 
 ```cpp
-constexpr int MAX_RETRIES = 5;
+// OK - trivial
+// config.cpp
+constexpr int g_config = 1;
+
+// logger.cpp
+extern int g_config;
+constexpr int g_logger_config = g_config;
+
+// OK - initialization on first use
+// config.cpp
+const std::string &get_config()
+{
+    static const std::string config = "project";
+    return config;
+}
+
+// logger.cpp
+std::string get_prefix()
+{
+    return get_config() + ":";
+}
+
+// Wrong - initialization order undefined
+// config.cpp
+const std::string g_config = "project";
+
+// logger.cpp
+const std::string g_prefix = g_config + ":";
+```
+
+- Avoid global/file-local static objects whose destructors depend on other non-trivially destructible global/file-local static objects.
+
+```cpp
+// OK - no external dependencies
+// logger.cpp
+struct Logger {
+    ~Logger() {
+        std::cout << "shutdown\n";
+    }
+};
+
+Logger g_logger;
+
+// Wrong - destruction order undefined
+// config.cpp
+std::string g_config = "project";
+
+// logger.cpp
+extern std::string g_config;
+
+struct Logger {
+    ~Logger() {
+        std::cout << "closing logs for " << g_config;
+    }
+};
+
+Logger g_logger;
 ```
 
 ### thread_local Variables
 
-- Use `thread_local` only when per-thread state is genuinely required
-- Name with a `tl_` prefix to make the storage class visible at the call site
+- Prefer `thread_local` over other ways of defining thread-local data.
 
 ```cpp
-thread_local std::mt19937 tl_rng{std::random_device{}()};
+// OK
+thread_local Parser parser;
+
+// Wrong
+std::unordered_map<std::thread::id, Parser> data;
 ```
+
+- Avoid any dynamic initialization of a `thread_local` object that depends on another non-trivial `thread_local` object in a different translation unit.
+
+- Avoid `thread_local` objects whose destructors depend on other non-trivially destructible `thread_local` objects in different translation units.
 
 ---
 
@@ -1238,52 +457,76 @@ thread_local std::mt19937 tl_rng{std::random_device{}()};
 
 ### Doing Work in Constructors
 
-- Keep constructors lightweight; avoid operations that can fail or throw
-- Use factory functions or `init()` methods for complex initialization
+- Avoid virtual calls in constructors.
+- Keep constructors lightweight.
+- Use factories or `init()` for work that can fail (this project does not use exceptions as primary error flow).
 
 ```cpp
 // OK
-Foo::Foo() { connect_to_database(); } // can throw, hard to recover
+Foo::Foo()
+{
+}
+
+int Foo::init()
+{
+    return connect_to_database();
+}
 
 // Wrong
-static std::expected<Foo, Error> create();
+Foo::Foo()
+{
+    connect_to_database();
+}
 ```
 
 ### Implicit Conversions
 
-- Mark single-argument constructors `explicit` to prevent unintended implicit conversions
+- Mark single-argument constructors and conversion operators `explicit`.
+- Copy/move constructors stay non-`explicit`.
+- Constructor with single std::initializer_list parameter should omit explicit, in order to support copy-initialization (e.g., MyType m = {1, 2};).
 
 ```cpp
 class Buffer {
 public:
     explicit Buffer(std::size_t size);
+    Buffer(const Buffer &buffer);
+    Buffer(Buffer &&buffer) noexcept;
+    Buffer(std::initializer_list<char> values);
+    explicit operator bool() const noexcept;
 };
 ```
 
 ### Copyable and Movable Types
 
-- Explicitly declare or delete copy/move operations (Rule of Five / Rule of Zero)
-- Resource-owning classes should implement move; value types should support copy
+- Make copy/move intent explicit (Rule of Five or Rule of Zero).
+- Move operations should be `noexcept` when defined.
 
 ```cpp
 class Socket {
 public:
-    Socket(const Socket&) = delete;
-    Socket& operator=(const Socket&) = delete;
-    Socket(Socket&&) noexcept;
-    Socket& operator=(Socket&&) noexcept;
+    Socket() = default;
+    ~Socket();
+    Socket(const Socket &) = delete;
+    Socket &operator=(const Socket &) = delete;
+    Socket(Socket &&) noexcept;
+    Socket &operator=(Socket &&) noexcept;
 };
 ```
 
 ### Structs vs. Classes
 
-- Use `struct` for passive data holders with no invariants
-- Use `class` when data has invariants enforced by methods
+- `struct` for passive data with public fields and no invariants.
+- `class` when methods enforce invariants.
 
 ```cpp
 struct Point { double x, y; };
 
 class Circle {
+public:
+    explicit Circle(Point center, double radius);
+    int set_radius(double radius);
+
+private:
     Point center;
     double radius; // invariant: radius > 0
 };
@@ -1291,22 +534,18 @@ class Circle {
 
 ### Structs vs. Pairs and Tuples
 
-- Prefer named structs over `std::pair` / `std::tuple` when fields have semantic meaning
+- Prefer named `struct` over `std::pair` / `std::tuple` when fields have meaning.
 
 ```cpp
-// OK
 struct Range { double low, high; };
-Range get_range();
-
-// Wrong
-std::pair<double, double> get_range();
 ```
 
 ### Inheritance
 
-- Prefer composition over inheritance
-- Use `override` and `final` explicitly; never omit them on virtual overrides
-- Virtual destructors are required in polymorphic base classes
+- Prefer composition over inheritance.
+- Use `public` inheritance only; annotate overrides with `override` / `final`.
+- Polymorphic bases need virtual destructors.
+- Limit multiple implementation inheritance.
 
 ```cpp
 class Base {
@@ -1323,41 +562,27 @@ public:
 
 ### Operator Overloading
 
-- Only overload operators when the meaning is obvious and conventional (e.g., `==`, `<`, `<<`)
-- Prefer non-member operators for symmetry; implement `==` and `<=>` (C++20)
-
-```cpp
-[[nodiscard]] bool operator==(const Price& lhs, const Price& rhs) noexcept;
-
-// C++20 spaceship
-auto operator<=>(const Price&) const = default;
-```
+- Overload only when meaning matches built-in operators (`==`, `<<`, etc.).
+- Do not overload `&&`, `||`, `,`, or unary `&`.
+- Do not use user-defined literals.
+- Prefer `operator==` (and `operator<=>` when a total order is obvious).
 
 ### Access Control
 
-- Default to `private`; expose only what callers need
-- Keep data members `private`; provide accessors if needed
-
-```cpp
-class Order {
-public:
-    [[nodiscard]] int get_id() const noexcept { return id; }
-private:
-    int id;
-};
-```
+- Data members are `private` unless the type is a passive `struct`.
+- Use `protected` sparingly — only for hooks intended for subclasses.
 
 ### Declaration Order
 
-- `public` → `protected` → `private`
-- Within each section: types, constants, constructors, methods, data
+- Order: `public` → `protected` → `private`.
+- Within each section: types, constants, constructors, destructor, methods, data.
 
 ```cpp
 class Foo {
 public:
     using Id = int;
     explicit Foo(Id id);
-    [[nodiscard]] Id get_id() const noexcept;
+    Id get_id() const noexcept;
 
 private:
     Id id;
@@ -1370,46 +595,35 @@ private:
 
 ### Inputs and Outputs
 
-- Prefer return values over output parameters
-- Take inputs by value when you need a copy, by `const&` when you only read
-- Use `std::optional` for nullable returns instead of pointer + bool pairs
+- Prefer return values over output parameters.
+- Inputs: pass by value (cheap copies) or `const &` (read-only).
+- Outputs: non-optional outputs use references; optional outputs use pointers.
+- **Inputs before outputs.**
 
 ```cpp
-// BAD
-void get_name(std::string* out);
-
-// GOOD
-[[nodiscard]] std::string get_name();
-[[nodiscard]] std::optional<Order> find_order(int id);
+int get_id(const std::string &name, Id &id);  // OK
+void bad(Id &id, const std::string &name);    // Wrong — output first
 ```
 
 ### Write Short Functions
 
-- Keep functions focused on a single responsibility; prefer ≤ 40 lines
-- Extract helpers when logic can be named meaningfully
+- Keep functions focused; consider splitting around 40 lines.
+- Extract helpers instead of deep nesting.
 
 ### Function Overloading
 
-- Overload only when functions are truly equivalent in behavior for different types
-- Avoid overloads that differ only in subtle conversion rules
-
-```cpp
-void print(int value);
-void print(double value);  // OK: same semantics, different type
-```
+- Overload only when call sites are clear without knowing the exact overload.
+- Prefer `std::string_view` over parallel `std::string` / `const char*` overloads.
 
 ### Default Arguments
 
-- Use default arguments only for trailing parameters with stable defaults
-- Avoid mutable or complex expressions as default values
-
-```cpp
-void connect(std::string_view host, uint16_t port = 8080);
-```
+- Allowed on non-virtual functions when the default is stable.
+- Banned on virtual functions.
+- Prefer overloads when defaults harm readability or binary size.
 
 ### Trailing Return Type Syntax
 
-- Use trailing return types when the return type depends on parameters or improves readability in templates
+- Use only for lambdas, template-heavy returns, or when it clearly improves readability.
 
 ```cpp
 template <typename T, typename U>
@@ -1418,424 +632,503 @@ auto add(T a, U b) -> decltype(a + b);
 
 ---
 
+## Tooling
+
+- Format code with **clang-format** using the project `.clang-format` in the repository root.
+- **Formatting rules in `.clang-format` and this document override Google defaults** (e.g. 100-column limit, function brace on its own line, pointer/reference alignment).
+- Configure your editor to format on save when possible.
+
+---
+
 ## Other C++ Features
+
+### Ownership and Smart Pointers
+
+- Prefer single, clear owners; express transfers with `std::unique_ptr`.
+- Use `std::shared_ptr` only for shared ownership that is truly needed.
+- Never use `std::auto_ptr`.
+
+```cpp
+std::unique_ptr<Foo> make_foo();
+void consume(std::unique_ptr<Foo> foo);
+```
 
 ### Rvalue References
 
-- Use `&&` parameters for move constructors and move assignment operators
-- Use forwarding references (`T&&`) in templates with `std::forward`
-
-```cpp
-template <typename T>
-void push(T&& value) {
-    data_.emplace_back(std::forward<T>(value));
-}
-```
+- Use `&&` for move constructors/assignment, `std::forward` for forwarding, and consuming APIs.
+- Do not use rvalue references casually in non-move APIs.
 
 ### Friends
 
-- Minimize `friend` declarations; they break encapsulation
-- Use `friend` only for operators that genuinely need private access
-
-```cpp
-class Money {
-    friend bool operator==(const Money&, const Money&) noexcept;
-    int cents_;
-};
-```
+- Allowed when it keeps encapsulation; define friends in the same file when possible.
 
 ### Exceptions
 
-- Use exceptions only for truly exceptional cases
-- Never throw from destructors
-- Document which functions throw with `noexcept` or comments
+- Use exceptions only for truly exceptional cases — not normal control flow.
+- Expected failures return status codes, `std::optional`, or error types.
+
+```cpp
+// OK — invariant violation
+void set_size(std::size_t size)
+{
+    if (size == 0) {
+        throw std::logic_error("size must be positive");
+    }
+}
+
+// Wrong — missing file is expected
+if (!std::filesystem::exists(path)) {
+    throw std::runtime_error("file not found");
+}
+```
 
 ### noexcept
 
-- Mark functions `noexcept` when they cannot throw; this enables optimizer and move semantics
-- Move constructors and move assignment operators should almost always be `noexcept`
+- Mark non-throwing functions `noexcept`, especially move operations.
 
 ```cpp
-Socket(Socket&&) noexcept;
-Socket& operator=(Socket&&) noexcept;
+Socket(Socket &&) noexcept;
+Socket &operator=(Socket &&) noexcept;
 ```
 
 ### Run-Time Type Information (RTTI)
 
-- Avoid `dynamic_cast` and `typeid`; redesign using virtual dispatch or `std::variant`
-- If `dynamic_cast` is unavoidable, always check the result before use
-
-```cpp
-// BAD
-Derived* d = dynamic_cast<Derived*>(base_ptr);
-d->foo(); // crash if null
-
-// GOOD
-if (auto* d = dynamic_cast<Derived*>(base_ptr)) {
-    d->foo();
-}
-```
+- Avoid `dynamic_cast` and `typeid` in production code; prefer virtual dispatch or visitors.
+- RTTI is acceptable in tests when necessary.
 
 ### Casting
 
-- Use C++ named casts — never C-style casts
-- `static_cast` for safe conversions, `reinterpret_cast` only for low-level bit manipulation, `const_cast` almost never
+- Use C++ named casts; never C-style casts.
+- `static_cast` for safe conversions; `reinterpret_cast` only for low-level code.
 
 ```cpp
-auto x = static_cast<double>(integer_value);
-// NOT: (double)integer_value
+auto x = static_cast<double>(value);
+// Wrong: (double)value
 ```
 
 ### Streams
 
-- No `std::cout` in production code; use the project logger
-- Prefer structured logging over stream concatenation
+- No `std::cout` / `std::cerr` in production code; use the project logger.
+- Avoid stream formatting state; prefer structured logging.
 
 ```cpp
-// BAD
-std::cout << "price=" << price << "\n";
-
-// GOOD
-log_info("price={}", price);
+log_info("value={}", value);
 ```
 
 ### Preincrement and Predecrement
 
-- Prefer `++i` over `i++` for non-primitive types to avoid unnecessary copies
+- Prefer `++i` / `--i` unless postfix semantics are required.
 
 ```cpp
-for (auto it = v.begin(); it != v.end(); ++it) { ... }
+for (auto it = v.begin(); it != v.end(); ++it) { }
 ```
 
 ### Use of const
 
-- Mark everything `const` where possible — parameters, local variables, member functions
+- Use `const` on parameters, locals (when helpful), and member functions that do not mutate logical state.
+- `const` on by-value parameters is discouraged in declarations.
 
 ```cpp
-const std::string& symbol() const;
-void process(const Order& order);
+const std::string &name() const;
+void process(const Request &req);
 ```
 
-### Use of constexpr
+#### Where to put the const
 
-- Use `constexpr` for values and functions computable at compile time
-- Prefer `constexpr` over `#define` for constants
+- **Project style:** attach `*` / `&` to the **variable name** (see Formatting), not `const int* p` vs `int const* p` debates.
+- Be consistent within a file.
+
+### Use of constexpr, constinit, and consteval
+
+- Use `constexpr` for compile-time constants and functions.
+- Use `constinit` for static/thread-local storage requiring constant initialization.
+- Use `consteval` when evaluation must happen at compile time only.
+- Prefer `constexpr` over macros for constants.
 
 ```cpp
-constexpr double PI = 3.14159265358979;
+constexpr int max_buffer = 4096;
 constexpr int factorial(int n) { return n <= 1 ? 1 : n * factorial(n - 1); }
 ```
 
 ### Integer Types
 
-- Use fixed-width types (`int32_t`, `uint64_t`) when size matters
-- Use `std::size_t` for sizes and indices into containers
-- Avoid bare `int` for domain values with implicit semantics
+- Use `<cstdint>` (`int32_t`, `uint64_t`, etc.) when size matters.
+- Use `std::size_t` for sizes and container indices.
+- Avoid bare `int` for domain values with implicit width requirements.
 
 ```cpp
-#include <cstdint>
 uint64_t order_id;
 std::size_t count = vec.size();
 ```
 
-### 64-bit Portability
+#### On Unsigned Integers
 
-- Do not assume `int`, `long`, or pointer size; use `<cstdint>` types
-- Use `%zu` / `PRId64` format specifiers or structured logging
+- Avoid unsigned types except for bit patterns, modular arithmetic, or APIs that require them.
+- Do not use `unsigned` merely to mean “non-negative”.
+
+### Floating-Point Types
+
+- Use `float` and `double` only; avoid `long double`.
+- Include a decimal point in literals (`1.0`, `0.5f`).
+
+### Architecture Portability
+
+- Do not assume sizes of `int`, `long`, or pointers.
+- Use `<cstdint>` and portable formatting (`log_info`, not `printf` with wrong length modifiers).
+- Store addresses as `uintptr_t` when needed as integers.
 
 ```cpp
 int64_t value = ...;
-log_info("value={}", value); // not printf with %ld
+log_info("value={}", value);
 ```
 
 ### Preprocessor Macros
 
-- Avoid macros for constants and inline functions; use `constexpr` and `inline` instead
-- Reserve macros for guards and platform/debug conditionalization
+- Avoid macros for constants and functions; use `constexpr` and `inline`.
+- Reserve macros for include guards and conditional compilation.
+- Macros must be ALL_CAPS; protect arguments and full expression with parentheses.
+- Multi-statement macros use `do { ... } while (0)`.
+- Prefer `#if defined(X)` over `#ifdef`; document `#endif` conditions.
 
 ```cpp
-// OK
-constexpr int MAX_SIZE = 256;
-constexpr int sq(int x) { return x * x; }
-
-// Wrong
-#define MAX_SIZE 256
-#define SQ(x) ((x)*(x))
-
+#define SQUARE(x) ((x) * (x))
 ```
 
 ### 0 and nullptr/NULL
 
-- Use `nullptr` for null pointers, never `0` or `NULL`
+- Use `nullptr` for null pointers; never `0` or `NULL`.
+- Use `'\0'` for the null character.
 
 ```cpp
-int* p = nullptr;
-if (p != nullptr) { ... }
+int *p = nullptr;
+if (!p) { }
 ```
 
 ### sizeof
 
-- Use `sizeof(variable)` rather than `sizeof(type)` to stay correct if the type changes
+- Prefer `sizeof(variable)` over `sizeof(Type)`.
 
 ```cpp
-// BAD
-memset(buf, 0, sizeof(char) * N);
-
-// GOOD
-memset(buf, 0, sizeof(buf));
+memset(&data, 0, sizeof(data));
 ```
 
-### Type Deduction
+### Type Deduction (including auto)
 
-- Use `auto` when the type is obvious from context or verbose to write
-- Avoid `auto` when the type is important to the reader
+- Use `auto` when it improves clarity or safety; do not use it to hide important types.
+- Use `auto*` / `auto&` when the pointer/reference qualification matters.
+
+#### Function template argument deduction
+
+- Let the compiler deduce template arguments when clear.
+
+#### Local variable type deduction
 
 ```cpp
-auto it = map.find(key);          // OK: type is clear from context
-auto result = compute();          // BAD: return type hidden from reader
-std::optional<Order> result = compute(); // GOOD
+auto it = map.find(key);           // OK when type is obvious
+const auto &entry = items.front(); // OK — preserve reference
+```
+
+#### Return type deduction
+
+- Avoid `auto` return types on public APIs unless the type is obvious or template code requires it.
+
+#### Function parameter type deduction
+
+- Generic lambdas may use `auto` parameters; prefer explicit types in public APIs.
+
+#### Lambda init captures
+
+```cpp
+auto worker = [buffer = std::move(buf)]() { process(buffer); };
+```
+
+#### Structured bindings
+
+```cpp
+const auto [iter, inserted] = map.insert({key, value});
 ```
 
 ### Class Template Argument Deduction
 
-- Use CTAD (C++17) to avoid redundant template arguments when deduction is unambiguous
+- Use CTAD when it simplifies code and the deduced type is correct.
+- Prefer explicit types when deduction is surprising.
 
 ```cpp
-std::pair p{1, 2.0};          // deduced std::pair<int, double>
-std::vector v{1, 2, 3};       // deduced std::vector<int>
+std::vector names = std::vector<std::string>{"a", "b"};
 ```
 
 ### Designated Initializers
 
-- Use designated initializers (C++20) for structs to make initialization self-documenting
+- Use designated initializers (C++20) for structs with many fields — improves readability.
 
 ```cpp
-struct Config { int port; bool tls; std::string host; };
-Config cfg{.port = 8080, .tls = true, .host = "localhost"};
+Config cfg {
+    .host = "localhost",
+    .port = 8080,
+};
 ```
 
 ### Lambda Expressions
 
-- Prefer explicit capture lists over `[=]` or `[&]` to make captured variables obvious
-- Keep lambda bodies short; extract named functions for complex logic
-
-```cpp
-auto is_valid = [threshold](const Order& o) {
-    return o.quantity() > threshold;
-};
-```
+- Prefer lambdas over `std::bind`.
+- Capture by reference only when lifetime is guaranteed.
 
 ### Template Metaprogramming
 
-- Use `if constexpr`, `std::enable_if`, or concepts (C++20) instead of complex SFINAE
-- Prefer concepts for readable constraints
+- Use templates when they reduce duplication without harming readability.
+- Prefer concepts (C++20) over SFINAE when possible.
+
+### Concepts and Constraints
+
+- Use `requires` clauses to document template requirements.
 
 ```cpp
 template <std::integral T>
-T clamp(T val, T lo, T hi);
+T twice(T value) { return value * 2; }
 ```
+
+### C++20 modules
+
+- Not used in this project yet; continue with headers until a project-wide modules policy exists.
+
+### Coroutines
+
+- Avoid coroutines unless there is a clear, reviewed use case and team familiarity.
+
+### Disallowed standard library features
+
+- `std::auto_ptr` — use `std::unique_ptr`.
+- Avoid deprecated facilities; follow compiler warnings.
+
+### Third-party Libraries
+
+- Prefer established libraries already in the project over ad-hoc implementations.
+- Match third-party naming only at integration boundaries.
 
 ### Boost
 
-- Prefer standard library equivalents over Boost when available in C++17/20
-- Use Boost only when the standard has no suitable alternative; document why
+- Use Boost libraries already approved for the project (e.g. error codes, utilities).
+- Do not add new Boost dependencies without review.
 
 ### std::hash
 
-- Provide a `std::hash` specialization for custom key types used in unordered containers
+- Specialize `std::hash` in the same namespace as the type only when required for standard containers.
+- Ensure hash and equality are consistent.
 
 ```cpp
+namespace my_project {
+
+struct Id { std::uint64_t value; };
+
+} // namespace my_project
+
 template <>
-struct std::hash<OrderId> {
-    std::size_t operator()(OrderId id) const noexcept {
-        return std::hash<int>{}(id.value());
+struct std::hash<my_project::Id> {
+    std::size_t operator()(const my_project::Id &id) const noexcept
+    {
+        return std::hash<std::uint64_t>{}(id.value);
     }
 };
 ```
 
 ### Nonstandard Extensions
 
-- Avoid compiler-specific extensions (`__attribute__`, `__declspec`) unless wrapping them in macros that degrade gracefully
+- Avoid compiler-specific extensions unless isolated, documented, and reviewed.
+- Prefer standard C++20 equivalents when they exist.
+- Wrap unavoidable extensions in portability macros or headers — do not scatter them through business logic.
 
 ```cpp
-#if defined(__GNUC__) || defined(__clang__)
-#define LIKELY(x)   __builtin_expect(!!(x), 1)
+// Wrong — GCC/Clang-only attribute in public API
+__attribute__((packed)) struct Header { int id; };
+
+// OK — standard attribute
+[[nodiscard]] int parse(const std::string &input);
+
+// Wrong — vendor builtin in application code
+int count = __builtin_popcount(flags);
+
+// OK — standard library / portable code
+int count = std::popcount(flags); // C++20
+
+// Wrong — inline assembly without abstraction
+asm("nop");
+
+// OK — isolated platform layer (document why standard C++ is insufficient)
+#if defined(__GNUC__)
+#define FORCE_INLINE __attribute__((always_inline)) inline
+#elif defined(_MSC_VER)
+#define FORCE_INLINE __forceinline
 #else
-#define LIKELY(x)   (x)
+#define FORCE_INLINE inline
 #endif
 ```
 
 ### Aliases
 
-- Use `using` instead of `typedef`; prefer aliases in the narrowest applicable scope
+- Prefer `using` over `typedef`.
+- Type aliases at the appropriate scope — public API types in headers, local aliases in `.cpp`.
 
 ```cpp
-using OrderMap = std::unordered_map<int, Order>;
-using Callback = std::function<void(const Event&)>;
+using Id = std::uint64_t;
+```
+
+### Switch Statements
+
+- Always include `default`.
+- Mark intentional fall-through with `[[fallthrough]]`.
+- See [Formatting](#looping-and-branching-statements) for layout rules.
+
+```cpp
+switch (state) {
+case State::Idle:
+    reset();
+    break;
+case State::Running:
+    tick();
+    [[fallthrough]];
+case State::Stopping:
+    shutdown();
+    break;
+default:
+    break;
+}
 ```
 
 ---
 
 ## Inclusive Language
 
-- Avoid terms with exclusionary connotations: prefer `allowlist`/`denylist` over `whitelist`/`blacklist`, `primary`/`replica` over `master`/`slave`
+- Use respectful, inclusive terminology in names and comments.
+- Replace offensive or exclusionary terms when touching related code.
 
 ---
 
 ## Naming
 
-### General Naming Rules
+### Choosing Names
 
-- Prefer **clarity over cleverness**
-- Names should be descriptive at their scope: short for loop counters, verbose for public APIs
-- Use only lowercase characters for variables/functions/types with optional underscore `_` character.
-- Do not use `__` or `_` prefix for variables/functions/macros/types. This is reserved for the language itself.
+- Clarity over cleverness.
+- Names reflect meaning at their scope — short in tight loops, descriptive in public APIs.
+- **Project style:** lowercase `snake_case` for functions, variables, and constants (overrides Google `MixedCase` / `kConstant` style).
+- Do not use `_` or `__` prefixes reserved for the implementation.
 
 ### File Names
 
-- Headers: `snake_case.hpp`
-- Sources: `snake_case.cpp`
-- One primary class per file (when reasonable)
-
-```
-order_book.hpp
-order_book.cpp
-```
+- `snake_case.h` / `snake_case.cpp`.
+- One primary type per file when reasonable.
 
 ### Type Names
 
-- Classes / Structs / Enums: **PascalCase**
+- Classes, structs, enums: **PascalCase**.
 
 ```cpp
-class Singleton;
-struct Parameters;
-enum class Color;
+class OrderBook {};
+enum class Color { COLOR_RED, COLOR_GREEN };
+```
+
+### Concept Names
+
+- PascalCase, noun phrase describing the requirement.
+
+```cpp
+template <typename T>
+concept Hashable = requires(T value) {
+    { std::hash<T>{}(value) } -> std::convertible_to<std::size_t>;
+};
 ```
 
 ### Variable Names
 
-- Local and member variables must be lowercase with optional underscore `_` character.
-- Member variables do not have trailing underscore.
-- Variable should not include the data type, rather the meaning of the information in the data.
+- Locals and members: `snake_case`.
+- **No trailing underscore** on members (overrides Google `member_` style).
+- Do not encode type in the name (`i32_count`).
 
 ```cpp
-// OK
-int32_t a;
-int32_t my_var;
-int32_t myvar;
-
-class A {
-    int a;
+class Session {
+    int user_id;
+    std::string display_name;
 };
-
-// Wrong
-int32_t A;
-int32_t myVar;
-int32_t MYVar;
-int32_t i32_var;
-bool bFlag;
-
-class A {
-    int a_;
-};
-
 ```
+
+#### Common Variable names
+
+- Short names (`i`, `it`) only in tiny scopes; descriptive names elsewhere.
+
+#### Class Data Members
+
+- Same as variables: `snake_case`, no trailing underscore.
+
+#### Struct Data Members
+
+- Public struct fields use `snake_case`.
 
 ### Constant Names
 
-- Upper snake case
+- `snake_case` with `constexpr` / `const` (overrides Google `kConstantName`).
 
 ```cpp
-constexpr int MAX_RETRIES = 5;
+constexpr int max_retries = 5;
 ```
 
 ### Function Names
 
-- Function and method name must be lowercase, optionally separated with underscore `_` character.
-```cpp
-// OK
-void my_func();
-void myfunc();
+- `snake_case` for free functions and methods.
 
-// Wrong
-void MYFunc();
-void myFunc();
+```cpp
+void process_order();
+int compute_hash();
 ```
 
 ### Namespace Names
 
-- All lowercase, short, no underscores
+- All lowercase, short, typically no underscores.
 
 ```cpp
 namespace myproject {}
-namespace net {}
 ```
 
 ### Enumerator Names
 
-- All enumeration members should be uppercase.
+- **All uppercase** with a common prefix (project convention).
 
 ```cpp
-// OK
 enum class Color {
     COLOR_RED,
     COLOR_GREEN,
 };
-
-// Wrong
-enum class Color {
-    color_red,
-    ColorGreen,
-};
 ```
 
-```cpp
-enum class OrderSide { Buy, Sell };
-```
+### Template Parameter Names
+
+- PascalCase for type parameters; concise but meaningful (`T`, `Iterator`, `Allocator`).
 
 ### Macro Names
 
-- All caps with underscores; prefix with project name to avoid collisions
+- ALL_CAPS with project prefix.
 
 ```cpp
 #define MYPROJECT_ASSERT(x) ...
 ```
 
+### Aliases
+
+- `snake_case` for type aliases at namespace scope when they are not public type names.
+
 ### Exceptions to Naming Rules
 
-- Standard library–style types (`iterator`, `value_type`) may use lowercase to satisfy concept requirements
-- Third-party API callbacks may match the API's convention
+- Standard-like traits (`value_type`, `iterator`) may use library conventions.
+- Third-party callbacks may match external API naming.
 
 ---
 
 ## Comments
 
-- Explain **why**, not **what**
-- Keep comments up to date
-- Use `//` for all comments.
-- Reserve `/* */` only for disabling blocks temporarily.
-- Add single space after `/*` or `//`.
-```cpp
-// This is comment (OK)
-
-//This is comment (Wrong)
-```
-
-- Do not use comments for obvious logic. The code should explain itself.
-```c
-// OK
-// Clear basic rate flag and convert 500 kbps to 100 kbps units
-rate[i] = (rate[i] & 0x7f) * 5;
-
-// Wrong
-// Check file exists
-if (access(file_name, R_OK) == 0) {
-}
-```
+- Explain **why**, not **what**.
+- Keep comments accurate.
+- Use `//` for comments; `/* */` only to disable code temporarily.
+- Single space after `//`.
 
 ### Comment Style
-
-- Use `//` for all comments; reserve `/* */` only for disabling blocks temporarily
 
 ```cpp
 // Adjust price to avoid crossing the spread
@@ -1844,60 +1137,90 @@ int adjusted = price - spread;
 
 ### File Comments
 
-- Include a brief one-line description of the file's purpose at the top
+- Brief one-line purpose at the top (after license).
 
 ```cpp
-// order_book.hpp — limit order book with O(log n) insert/cancel
+// order_book.h - limit order book with O(log n) insert/cancel
 ```
 
-### Class Comments
+#### Legal Notice and Author Line
 
-- Document the class's invariants and intended usage; skip obvious boilerplate
+- Every file includes the project license header.
+- Do not add per-author ownership lines unless required by project policy.
+
+### Struct and Class Comments
+
+- Document invariants and thread-safety expectations when non-obvious.
 
 ```cpp
-// Thread-safe order book. All public methods lock mutex_.
-class OrderBook { ... };
+// Thread-safe order book. Public methods take the internal mutex.
+class OrderBook {};
 ```
+
+#### Class Comments
+
+- Same as struct/class comments — focus on usage and invariants.
 
 ### Function Comments
 
-- Document non-obvious preconditions, postconditions, and ownership semantics
+- Document non-obvious preconditions, postconditions, and ownership.
+
+#### Function Declarations
 
 ```cpp
-// Returns the best bid price, or std::nullopt if the book is empty.
+// Returns the best bid, or std::nullopt if the book is empty.
 [[nodiscard]] std::optional<Price> best_bid() const;
 ```
 
+#### Function Definitions
+
+- Comment only when behavior is not obvious from code.
+
 ### Variable Comments
 
-- Only comment member variables when their purpose or units are non-obvious
+- Comment members only when units or semantics are unclear.
 
 ```cpp
-double tick_size_;  // minimum price increment, in USD
+double tick_size; // minimum price increment, USD
 ```
+
+#### Class Data Members
+
+- Trailing end-of-line comments for non-obvious fields.
+
+#### Global Variables
+
+- Avoid globals; if unavoidable, document lifetime and threading.
 
 ### Implementation Comments
 
-```cpp
-// Price is adjusted to avoid crossing the spread
-```
+#### Explanatory Comments
+
+- Use for tricky algorithms, protocol details, or workarounds.
+
+#### Function Argument Comments
+
+- Prefer clear parameter names over arg comments; comment only when names are insufficient.
+
+#### Don'ts
+
+- Do not restate the code (`// increment i`).
 
 ### Punctuation, Spelling, and Grammar
 
-- Write complete sentences with proper capitalization and punctuation
-- Use American English spelling
+- Complete sentences; American English.
 
 ### TODO Comments
 
-- Include an owner or ticket reference so TODOs don't rot
+- Include owner or ticket reference.
 
 ```cpp
-// TODO(alice): replace with lock-free queue — see JIRA-1234
+// TODO(alice): replace with lock-free queue — JIRA-1234
 ```
 
 ### Deprecation Comments
 
-- Mark deprecated APIs with `[[deprecated]]` and a migration note
+- Mark deprecated APIs with `[[deprecated]]` and migration guidance.
 
 ```cpp
 [[deprecated("Use new_api() instead")]]
@@ -1906,15 +1229,252 @@ void old_api();
 
 ---
 
+## Formatting
+
+**`.clang-format` is authoritative** for mechanical layout. Summary of project rules (overrides Google 80-column, Attach braces for functions, left-pointer style):
+
+### Line Length
+
+- Limit lines to **100 characters**.
+
+### Non-ASCII Characters
+
+- Source files are UTF-8.
+- Avoid non-ASCII in identifiers; acceptable in comments when needed (e.g. units).
+
+### Spaces vs. Tabs
+
+- **4 spaces** for indentation; never tabs.
+
+### Function Declarations and Definitions
+
+- Return type on the same line as the function name.
+- **Opening brace on its own line** for functions (overrides Google).
+- Attach `*` / `&` to the **variable name**.
+- Empty parameter lists omit `void` unless C linkage requires it.
+- Do not align parameters or prototypes.
+
+```cpp
+const char *my_func(int param1, char *param2, bool param3,
+    bool param4);
+
+void process()
+{
+}
+```
+
+### Lambda Expressions
+
+- Short lambdas inline; multi-line lambdas indented like function bodies.
+
+```cpp
+auto f = [](int x) { return x * 2; };
+
+auto g = [&](const Request &r) {
+    validate(r);
+    submit(r);
+};
+```
+
+### String Literals
+
+- Split long literals with adjacent strings, not `\` continuation.
+
+```cpp
+log_info("This is a long message that exceeds the column limit so we "
+         "split it across lines");
+```
+
+### Floating-point Literals
+
+- Always include a decimal point (`1.0`, `0.5f`).
+
+### Function Calls
+
+- No space before `(`; no space after `(`; space after each comma.
+
+```cpp
+sum(4, 3);       // OK
+sum (4, 3);      // Wrong
+```
+
+### Braced Initializer List Format
+
+- Short lists inline; longer lists one element per line.
+- Space inside braces: `{ 1, 2, 3 }`.
+
+```cpp
+std::vector<int> v = { 1, 2, 3 };
+```
+
+### Looping and branching statements
+
+- **Control-statement brace on same line** (`if`, `for`, `while`, `else`) — overrides Google for functions only.
+- Always brace `if` / `for` / `while` bodies.
+- `else` / `else if` on the same line as the closing `}`.
+- `while` of `do-while` on the same line as the closing `}` of `do`.
+- Prefer `continue` / early `return` over deep nesting; no `else` after `return`.
+
+```cpp
+if (a) {
+    do_a();
+} else if (b) {
+    do_b();
+} else {
+    do_c();
+}
+
+do {
+    step();
+} while (condition);
+```
+
+**Switch layout** (project rules):
+
+- Always `default`.
+- `case` labels not indented; body indented once.
+- No space before `:`; one space after `:` when case body is on same line.
+- Braces for `case` locals: `case 0: { ... break; }`.
+
+```cpp
+switch (c) {
+case 0:
+    do_a();
+    break;
+default:
+    break;
+}
+```
+
+### Pointer and Reference Expressions and Types
+
+- `*` and `&` bind to the **name**, not the type.
+
+```cpp
+int *ptr;
+const std::string &ref;
+```
+
+### Boolean Expressions
+
+- Do not compare to `0`, `false`, or `nullptr`; use truthiness / `!`.
+- Constant on the right: `length == 5` not `5 == length`.
+
+```cpp
+if (length) { }      // OK
+if (!ptr) { }         // OK
+if (ptr == nullptr) { } // Wrong
+```
+
+### Return Values
+
+- No parentheses around simple `return` values.
+- Pointer functions return `nullptr` on failure.
+- `int` status: `0` success, negative for errors.
+- `bool` predicates return `true` / `false` directly — not `0` / `1`.
+- No bare `return;` at end of `void` functions.
+- Exit early on errors.
+
+```cpp
+int open_file()
+{
+    if (error) {
+        return -1;
+    }
+    return 0;
+}
+```
+
+### Variable and Array Initialization
+
+- Prefer brace initialization `{}` to avoid narrowing.
+
+```cpp
+int x { 42 };     // OK
+int y = 3.14;     // Wrong — narrowing
+```
+
+### Preprocessor Directives
+
+- See [Preprocessor Macros](#preprocessor-macros); do not indent code inside `#if`.
+
+### Class Format
+
+- Access specifiers aligned with `class`; members indented 4 spaces.
+- **Class opening brace on same line** (differs from functions).
+
+```cpp
+class Foo {
+public:
+    explicit Foo(int id);
+    int get_id() const noexcept;
+
+private:
+    int id;
+};
+```
+
+### Constructor Initializer Lists
+
+- Break after colon; one member per line when wrapping.
+
+```cpp
+Foo::Foo(int id, std::string name)
+    : id(id),
+      name(std::move(name))
+{
+}
+```
+
+### Namespace Formatting
+
+- No extra indent inside namespaces; comment closing braces.
+
+```cpp
+namespace my_project::net {
+
+class Socket {};
+
+} // namespace my_project::net
+```
+
+### Horizontal Whitespace
+
+#### General
+
+- One space around binary operators and assignment.
+- No space after unary operators; no space before postfix `++`/`--`.
+- No trailing whitespace.
+
+#### Loops and Conditionals
+
+- Space after `if` / `for` / `while` / `switch` before `(`.
+
+#### Operators
+
+- See General; do not align operators across lines.
+
+#### Templates and Casts
+
+- No space in `static_cast<int>(value)`.
+
+### Vertical Whitespace
+
+- At most one blank line between logical sections.
+- No blank line at start or end of a function body.
+
+---
+
 ## Exceptions to the Rules
 
 ### Existing Non-conformant Code
 
-- Be consistent with existing code in the same file; prefer a single cleanup commit over mixing style in a functional PR
+- Match surrounding style in legacy code; prefer dedicated style-only cleanups over mixed-style functional changes.
 
-## Tooling
+### Windows Code
 
-Use auto-format of the code by clang-format tool. The formatting rules are specified in `.clang-format` configuration file in the root of the project. Most of the editors support clang-format as plugin. For example, VScode comes with pre-installed clang-format tool and automatically detects `.clang-format` file.
+- Platform-specific code may follow Windows API conventions where necessary (e.g. exception usage on that platform).
+- Keep platform differences localized and documented.
 
 ---
 
