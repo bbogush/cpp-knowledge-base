@@ -44,12 +44,13 @@ The container uses `docker/Dockerfile` (same as `docker_run.sh`).
 
 ## Build
 
-CMake is the build system. Two presets are defined in `CMakePresets.json`:
+CMake is the build system. Presets are defined in `CMakePresets.json`:
 
 | Preset | Output directory | Flags |
 |--------|------------------|-------|
 | `release` | `build/release` | `-O3` |
 | `debug` | `build/debug` | `-O3 -g -fno-omit-frame-pointer` |
+| `asan` | `build/asan` | `-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined` |
 
 From inside the container (or locally with CMake installed):
 
@@ -65,12 +66,21 @@ cmake --preset debug
 cmake --build --preset debug
 ```
 
+Or for AddressSanitizer:
+
+```bash
+cmake --preset asan
+cmake --build --preset asan
+```
+
 Run an example executable:
 
 ```bash
 ./build/release/abstract_factory
 # or
 ./build/debug/abstract_factory
+# or
+./build/asan/abstract_factory
 ```
 
 Clean build outputs:
@@ -84,7 +94,7 @@ rm -rf build
 ```
 .
 ├── CMakeLists.txt          # Root CMake project
-├── CMakePresets.json       # Debug and release build presets
+├── CMakePresets.json       # Release, debug, and ASan build presets
 ├── src/                    # Examples and exercises
 ├── docker/                 # Docker image and helper scripts
 └── .devcontainer/          # VS Code Dev Container config

@@ -23,6 +23,16 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_FLAGS_DEBUG": "-O3 -g -fno-omit-frame-pointer"
       }
+    },
+    {
+      "name": "asan",
+      "displayName": "ASan (-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined)",
+      "binaryDir": "${sourceDir}/build/asan",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS_DEBUG": "-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined",
+        "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
+      }
     }
   ],
   "buildPresets": [
@@ -33,6 +43,10 @@
     {
       "name": "debug",
       "configurePreset": "debug"
+    },
+    {
+      "name": "asan",
+      "configurePreset": "asan"
     }
   ]
 }
