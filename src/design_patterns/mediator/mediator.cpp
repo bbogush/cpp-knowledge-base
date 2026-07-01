@@ -19,15 +19,16 @@ public:
 
 class User {
 public:
-    User(std::string n, std::shared_ptr<ChatMediator> m) : name(n), mediator(m)
+    User(std::string name, std::shared_ptr<ChatMediator> chat_mediator) :
+        name(std::move(name)), mediator(chat_mediator)
     {
     }
     virtual ~User() = default;
 
     virtual void send(const std::string &msg)
     {
-        if (auto m = mediator.lock()) {
-            m->send_message(msg, this);
+        if (auto locked_mediator = mediator.lock()) {
+            locked_mediator->send_message(msg, this);
         } else {
             std::cerr << "Mediator is no longer available." << std::endl;
         }

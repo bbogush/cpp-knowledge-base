@@ -28,7 +28,7 @@ public:
 
 class CoffeeDecorator : public Coffee {
 public:
-    CoffeeDecorator(std::unique_ptr<Coffee> coffee) : coffee(std::move(coffee))
+    explicit CoffeeDecorator(std::unique_ptr<Coffee> coffee) : coffee(std::move(coffee))
     {
     }
     std::string get_description() const override
@@ -46,7 +46,7 @@ protected:
 
 class MilkDecorator : public CoffeeDecorator {
 public:
-    MilkDecorator(std::unique_ptr<Coffee> coffee) : CoffeeDecorator(std::move(coffee))
+    explicit MilkDecorator(std::unique_ptr<Coffee> coffee) : CoffeeDecorator(std::move(coffee))
     {
     }
     std::string get_description() const override
@@ -61,7 +61,7 @@ public:
 
 class SugarDecorator : public CoffeeDecorator {
 public:
-    SugarDecorator(std::unique_ptr<Coffee> coffee) : CoffeeDecorator(std::move(coffee))
+    explicit SugarDecorator(std::unique_ptr<Coffee> coffee) : CoffeeDecorator(std::move(coffee))
     {
     }
     std::string get_description() const override

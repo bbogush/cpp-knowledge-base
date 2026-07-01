@@ -14,13 +14,16 @@ public:
 
 class RealImage : public Image {
 public:
-    RealImage(const std::string &filename) : filename(filename)
+    explicit RealImage(const std::string &filename) : filename(filename)
     {
-        load_from_disk();
     }
 
     void display() override
     {
+        if (!loaded) {
+            load_from_disk();
+            loaded = true;
+        }
         std::cout << "Displaying " << filename << std::endl;
     }
 
@@ -31,11 +34,12 @@ private:
     }
 
     std::string filename;
+    bool loaded = false;
 };
 
 class ProxyImage : public Image {
 public:
-    ProxyImage(const std::string &file) : filename(file)
+    explicit ProxyImage(const std::string &file) : filename(file)
     {
     }
 

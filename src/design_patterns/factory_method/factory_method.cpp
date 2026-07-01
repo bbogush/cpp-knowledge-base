@@ -33,18 +33,18 @@ public:
     virtual ~Logistics() = default;
 
     // Factory Method
-    virtual std::unique_ptr<Transport> createTransport() const = 0;
+    virtual std::unique_ptr<Transport> create_transport() const = 0;
 
-    void planDelivery() const
+    void plan_delivery() const
     {
-        auto transport = createTransport();
+        auto transport = create_transport();
         transport->deliver();
     }
 };
 
 class RoadLogistics : public Logistics {
 public:
-    std::unique_ptr<Transport> createTransport() const override
+    std::unique_ptr<Transport> create_transport() const override
     {
         return std::make_unique<Truck>();
     }
@@ -52,7 +52,7 @@ public:
 
 class SeaLogistics : public Logistics {
 public:
-    std::unique_ptr<Transport> createTransport() const override
+    std::unique_ptr<Transport> create_transport() const override
     {
         return std::make_unique<Ship>();
     }
@@ -63,10 +63,10 @@ int main()
     std::unique_ptr<Logistics> logistics;
 
     logistics = std::make_unique<RoadLogistics>();
-    logistics->planDelivery();
+    logistics->plan_delivery();
 
     logistics = std::make_unique<SeaLogistics>();
-    logistics->planDelivery();
+    logistics->plan_delivery();
 
     return 0;
 }

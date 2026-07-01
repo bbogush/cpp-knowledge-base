@@ -9,7 +9,7 @@
 
 class LRUCache {
 public:
-    LRUCache(int capacity) : capacity(capacity)
+    explicit LRUCache(int capacity) : capacity(capacity)
     {
     }
 

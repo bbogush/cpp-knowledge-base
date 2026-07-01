@@ -5,11 +5,12 @@
 
 #include <iostream>
 
-template<typename T> class SharedPtr {
+template<typename T>
+class SharedPtr {
 public:
     SharedPtr() = default;
 
-    SharedPtr(T *ptr) : ptr(ptr), ref_count(new std::size_t { 1 })
+    explicit SharedPtr(T *ptr) : ptr(ptr), ref_count(new size_t { 1 })
     {
     }
 
@@ -90,7 +91,7 @@ public:
 
     explicit operator bool() const
     {
-        return ptr == nullptr;
+        return !!ptr;
     }
 
 private:
@@ -99,7 +100,7 @@ private:
 
     void release()
     {
-        if (ref_count && --(*ref_count) == 0) {
+        if (ref_count && !--(*ref_count)) {
             delete ptr;
             delete ref_count;
         }

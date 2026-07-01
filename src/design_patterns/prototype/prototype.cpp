@@ -16,13 +16,13 @@ public:
 
 class Circle : public Shape {
 public:
-    Circle(double radius) : radius(radius)
+    explicit Circle(double radius) : radius(radius)
     {
     }
 
     std::unique_ptr<Shape> clone() const override
     {
-        return std::unique_ptr<Shape>(new Circle(*this));
+        return std::make_unique<Circle>(*this);
     }
 
     void draw() const override
@@ -37,8 +37,8 @@ private:
 int main()
 {
     Circle circle(5.0);
-    std::unique_ptr<Shape> clonedCircle = circle.clone();
-    clonedCircle->draw();
+    std::unique_ptr<Shape> cloned_circle = circle.clone();
+    cloned_circle->draw();
 
     return 0;
 }

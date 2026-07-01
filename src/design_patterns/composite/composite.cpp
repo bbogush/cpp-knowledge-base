@@ -15,7 +15,7 @@ public:
 
 class File : public FileSystemComponent {
 public:
-    File(const std::string &name) : name(name)
+    explicit File(const std::string &name) : name(name)
     {
     }
 
@@ -30,7 +30,7 @@ private:
 
 class Directory : public FileSystemComponent {
 public:
-    Directory(const std::string &name) : name(name)
+    explicit Directory(const std::string &name) : name(name)
     {
     }
 

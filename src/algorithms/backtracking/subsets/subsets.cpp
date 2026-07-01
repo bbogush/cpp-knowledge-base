@@ -6,13 +6,14 @@
 #include <iostream>
 #include <vector>
 
-static void backtrack(const std::vector<int> &nums, int index, std::vector<int> &subset,
+namespace {
+
+void backtrack(const std::vector<int> &nums, size_t index, std::vector<int> &subset,
     std::vector<std::vector<int>> &result)
 {
-    // Save current subset
     result.push_back(subset);
 
-    for (unsigned int i = index; i < nums.size(); ++i) {
+    for (size_t i = index; i < nums.size(); ++i) {
         // Choose
         subset.push_back(nums[i]);
 
@@ -24,6 +25,8 @@ static void backtrack(const std::vector<int> &nums, int index, std::vector<int> 
     }
 }
 
+} // namespace
+
 int main()
 {
     std::vector<int> nums = { 1, 2, 3 };
@@ -34,8 +37,9 @@ int main()
 
     for (const auto &subset : result) {
         std::cout << "[ ";
-        for (int x : subset)
+        for (int x : subset) {
             std::cout << x << " ";
+        }
         std::cout << "]\n";
     }
 

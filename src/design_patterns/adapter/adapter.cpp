@@ -22,7 +22,7 @@ public:
 
 class PrinterAdapter : public Printer {
 public:
-    PrinterAdapter(std::unique_ptr<LegacyPrinter> legacy_printer) :
+    explicit PrinterAdapter(std::unique_ptr<LegacyPrinter> legacy_printer) :
         legacy_printer(std::move(legacy_printer))
     {
     }

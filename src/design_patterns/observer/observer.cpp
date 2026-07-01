@@ -21,8 +21,7 @@ public:
     }
     void unsubscribe(Observer *observer)
     {
-        observers.erase(std::remove(observers.begin(), observers.end(), observer),
-            observers.end());
+        observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
     }
     void publish()
     {

@@ -72,4 +72,6 @@ int main()
         Computer::Builder("Intel i9", "ASUS Z790").set_gpu(true).set_ram(32).set_storage(2).build();
 
     pc.print();
+
+    return 0;
 }
