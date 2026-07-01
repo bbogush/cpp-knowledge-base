@@ -44,22 +44,36 @@ The container uses `docker/Dockerfile` (same as `docker_run.sh`).
 
 ## Build
 
-CMake is the build system. From inside the container (or locally with CMake installed):
+CMake is the build system. Two presets are defined in `CMakePresets.json`:
+
+| Preset | Output directory | Flags |
+|--------|------------------|-------|
+| `release` | `build/release` | `-O3` |
+| `debug` | `build/debug` | `-O3 -g -fno-omit-frame-pointer` |
+
+From inside the container (or locally with CMake installed):
 
 ```bash
-mkdir -p build
-cd build
-cmake ..
-cmake --build .
+cmake --preset release
+cmake --build --preset release
 ```
 
-Run the executable:
+Or for a debug build with symbols:
 
 ```bash
-./cpp-project-template
+cmake --preset debug
+cmake --build --preset debug
 ```
 
-Clean the build directory:
+Run an example executable:
+
+```bash
+./build/release/abstract_factory
+# or
+./build/debug/abstract_factory
+```
+
+Clean build outputs:
 
 ```bash
 rm -rf build
@@ -70,7 +84,8 @@ rm -rf build
 ```
 .
 ├── CMakeLists.txt          # Root CMake project
-├── src/                    # Application source
+├── CMakePresets.json       # Debug and release build presets
+├── src/                    # Examples and exercises
 ├── docker/                 # Docker image and helper scripts
 └── .devcontainer/          # VS Code Dev Container config
 ```
