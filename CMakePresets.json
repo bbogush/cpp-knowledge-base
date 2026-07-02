@@ -2,7 +2,7 @@
   "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 16,
+    "minor": 20,
     "patch": 0
   },
   "configurePresets": [
@@ -33,6 +33,15 @@
         "CMAKE_CXX_FLAGS_DEBUG": "-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined",
         "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
       }
+    },
+    {
+      "name": "tests",
+      "displayName": "Tests (ASan + unit tests)",
+      "inherits": "asan",
+      "binaryDir": "${sourceDir}/build/tests",
+      "cacheVariables": {
+        "BUILD_TESTING": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -45,8 +54,21 @@
       "configurePreset": "debug"
     },
     {
+      "name": "tests",
+      "configurePreset": "tests"
+    },
+    {
       "name": "asan",
       "configurePreset": "asan"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "tests",
+      "configurePreset": "tests",
+      "output": {
+        "outputOnFailure": true
+      }
     }
   ]
 }

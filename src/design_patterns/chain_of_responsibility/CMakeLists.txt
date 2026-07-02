@@ -1,5 +1,5 @@
 add_executable(chain_of_responsibility chain_of_responsibility.cpp)
 
-target_compile_features(chain_of_responsibility PRIVATE cxx_std_20)
-target_compile_options(chain_of_responsibility PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(chain_of_responsibility PRIVATE project_options)
+target_link_libraries(chain_of_responsibility PRIVATE project_features)
 

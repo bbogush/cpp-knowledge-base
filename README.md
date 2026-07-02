@@ -2,12 +2,12 @@
 
 C++ knowledge base project.
 
-**Stack:** C++20, CMake 3.16+, Ubuntu 24.04 (GCC, CMake, Git)
+**Stack:** C++20, CMake 3.20+, Ubuntu 24.04 (GCC, CMake, Git)
 
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) — for the development environment
-- CMake 3.16+ — only needed if building outside Docker
+- CMake 3.20+ — only needed if building outside Docker
 
 ## Development environment
 
@@ -51,6 +51,7 @@ CMake is the build system. Presets are defined in `CMakePresets.json`:
 | `release` | `build/release` | `-O3` |
 | `debug` | `build/debug` | `-O3 -g -fno-omit-frame-pointer` |
 | `asan` | `build/asan` | `-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined` |
+| `tests` | `build/tests` | inherits `asan` + `BUILD_TESTING=ON` |
 
 From inside the container (or locally with CMake installed):
 
@@ -89,13 +90,24 @@ Clean build outputs:
 rm -rf build
 ```
 
+## Testing
+
+Unit tests use [Google Test](https://github.com/google/googletest), fetched automatically by CMake. The `tests` preset builds in `build/tests` with `BUILD_TESTING` enabled and AddressSanitizer/UBSan instrumentation.
+
+```bash
+cmake --preset tests
+cmake --build --preset tests
+ctest --preset tests
+```
+
 ## Project layout
 
 ```
 .
 ├── CMakeLists.txt          # Root CMake project
-├── CMakePresets.json       # Release, debug, and ASan build presets
-├── src/                    # Examples and exercises
+├── CMakePresets.json       # Release, debug, tests, and ASan presets
+├── src/                    # Application source
+├── tests/                  # Google Test unit tests
 ├── docker/                 # Docker image and helper scripts
 └── .devcontainer/          # VS Code Dev Container config
 ```

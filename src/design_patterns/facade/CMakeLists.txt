@@ -1,5 +1,5 @@
 add_executable(facade facade.cpp)
 
-target_compile_features(facade PRIVATE cxx_std_20)
-target_compile_options(facade PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(facade PRIVATE project_options)
+target_link_libraries(facade PRIVATE project_features)
 

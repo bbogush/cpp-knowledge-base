@@ -1,5 +1,5 @@
 add_executable(decorator decorator.cpp)
 
-target_compile_features(decorator PRIVATE cxx_std_20)
-target_compile_options(decorator PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(decorator PRIVATE project_options)
+target_link_libraries(decorator PRIVATE project_features)
 
