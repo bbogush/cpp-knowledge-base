@@ -35,7 +35,7 @@ Clean up when done:
 
 ## VS Code Dev Containers
 
-The [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension opens the project in the same Docker image. It installs C++ and CMake extensions automatically.
+As an alternative to starting Docker manually, VS Code can configure the environment automatically using the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. It opens the project in the same Docker image and installs the C++ and CMake extensions.
 
 1. Open the project in VS Code
 2. **Ctrl+Shift+P** → **Dev Containers: Reopen in Container**
