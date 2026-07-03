@@ -54,6 +54,7 @@ CMake is the build system. Presets are defined in `CMakePresets.json`:
 | `asan` | `build/asan` | Sanitizer-instrumented build |
 | `tests` | `build/tests` | Inherits `asan` with unit tests enabled |
 | `coverage` | `build/coverage` | Inherits `debug` with tests and `src/` coverage instrumentation |
+| `clang-tidy` | `build/clang-tidy` | Inherits `debug` with static analysis on `src/` |
 
 From inside the container (or locally with CMake installed):
 
@@ -122,12 +123,34 @@ cmake --build --preset coverage-report
 The last step writes an HTML report to
 `build/coverage/coverage-report/index.html`.
 
+## Clang-Tidy
+
+Static analysis uses [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) with
+the project `.clang-tidy` config. Analysis is scoped to `src/` and uses
+`compile_commands.json` from the `clang-tidy` preset (included in the Docker
+image).
+
+Configure, then run the `clang-tidy-check` build preset:
+
+```bash
+cmake --preset clang-tidy
+cmake --build --preset clang-tidy-check
+```
+
+Files are analyzed in parallel via `run-clang-tidy`. Job count defaults to the
+CPU count; set it at configure time with `-DCLANG_TIDY_JOBS=8`:
+
+```bash
+cmake --preset clang-tidy -DCLANG_TIDY_JOBS=8
+cmake --build --preset clang-tidy-check
+```
+
 ## Project layout
 
 ```
 .
 ├── CMakeLists.txt          # Root CMake project
-├── CMakePresets.json       # Release, debug, tests, ASan, and coverage presets
+├── CMakePresets.json       # Release, debug, tests, ASan, coverage, and clang-tidy presets
 ├── src/                    # Application source
 ├── tests/                  # Google Test unit tests
 ├── docker/                 # Docker image and helper scripts

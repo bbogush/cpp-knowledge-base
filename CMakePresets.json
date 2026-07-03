@@ -61,6 +61,15 @@
         "BUILD_TESTING": "ON",
         "ENABLE_COVERAGE": "ON"
       }
+    },
+    {
+      "name": "clang-tidy",
+      "displayName": "Clang-Tidy (static analysis on src/)",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/build/clang-tidy",
+      "cacheVariables": {
+        "ENABLE_CLANG_TIDY": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -93,6 +102,17 @@
       "configurePreset": "coverage",
       "targets": [
         "coverage-report"
+      ]
+    },
+    {
+      "name": "clang-tidy",
+      "configurePreset": "clang-tidy"
+    },
+    {
+      "name": "clang-tidy-check",
+      "configurePreset": "clang-tidy",
+      "targets": [
+        "clang-tidy"
       ]
     }
   ],
