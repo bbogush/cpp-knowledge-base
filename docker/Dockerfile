@@ -7,7 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
-    git
+    git \
+    lcov
 
 # Use a non-root user ubuntu
 ARG USERNAME=ubuntu

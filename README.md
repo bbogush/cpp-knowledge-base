@@ -53,6 +53,7 @@ CMake is the build system. Presets are defined in `CMakePresets.json`:
 | `debug` | `build/debug` | Unoptimized build with debug symbols |
 | `asan` | `build/asan` | Sanitizer-instrumented build |
 | `tests` | `build/tests` | Inherits `asan` with unit tests enabled |
+| `coverage` | `build/coverage` | Inherits `debug` with tests and `src/` coverage instrumentation |
 
 From inside the container (or locally with CMake installed):
 
@@ -101,12 +102,32 @@ cmake --build --preset tests
 ctest --preset tests
 ```
 
+## Coverage
+
+The `coverage` preset builds the `src/` targets with GCC coverage instrumentation
+(`--coverage`) and enables the unit tests. Coverage is scoped to `src/` — the
+report filters out test sources and Google Test headers.
+
+Configure, build, and run the tests to produce coverage data, then build the
+`coverage-report` preset. That step prints coverage summaries with `lcov` and
+generates an HTML report with `genhtml` (included in the Docker image):
+
+```bash
+cmake --preset coverage
+cmake --build --preset coverage
+ctest --preset coverage
+cmake --build --preset coverage-report
+```
+
+The last step writes an HTML report to
+`build/coverage/coverage-report/index.html`.
+
 ## Project layout
 
 ```
 .
 ├── CMakeLists.txt          # Root CMake project
-├── CMakePresets.json       # Release, debug, tests, and ASan presets
+├── CMakePresets.json       # Release, debug, tests, ASan, and coverage presets
 ├── src/                    # Application source
 ├── tests/                  # Google Test unit tests
 ├── docker/                 # Docker image and helper scripts
