@@ -8,29 +8,38 @@
   "configurePresets": [
     {
       "name": "release",
-      "displayName": "Release (-O3)",
+      "displayName": "Release (-O2 -DNDEBUG)",
       "binaryDir": "${sourceDir}/build/release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_CXX_FLAGS_RELEASE": "-O3"
+        "CMAKE_CXX_FLAGS_RELEASE": "-O2 -DNDEBUG"
+      }
+    },
+    {
+      "name": "relwithdebinfo",
+      "displayName": "RelWithDebInfo (-O2 -g -DNDEBUG)",
+      "binaryDir": "${sourceDir}/build/relwithdebinfo",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_CXX_FLAGS_RELWITHDEBINFO": "-O2 -g -DNDEBUG"
       }
     },
     {
       "name": "debug",
-      "displayName": "Debug (-O3 -g -fno-omit-frame-pointer)",
+      "displayName": "Debug (-O0 -g)",
       "binaryDir": "${sourceDir}/build/debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_FLAGS_DEBUG": "-O3 -g -fno-omit-frame-pointer"
+        "CMAKE_CXX_FLAGS_DEBUG": "-O0 -g"
       }
     },
     {
       "name": "asan",
-      "displayName": "ASan (-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined)",
+      "displayName": "ASan (-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer)",
       "binaryDir": "${sourceDir}/build/asan",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_FLAGS_DEBUG": "-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined",
+        "CMAKE_CXX_FLAGS_DEBUG": "-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer",
         "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address,undefined"
       }
     },
@@ -50,16 +59,20 @@
       "configurePreset": "release"
     },
     {
+      "name": "relwithdebinfo",
+      "configurePreset": "relwithdebinfo"
+    },
+    {
       "name": "debug",
       "configurePreset": "debug"
     },
     {
-      "name": "tests",
-      "configurePreset": "tests"
-    },
-    {
       "name": "asan",
       "configurePreset": "asan"
+    },
+    {
+      "name": "tests",
+      "configurePreset": "tests"
     }
   ],
   "testPresets": [

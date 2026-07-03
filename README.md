@@ -46,12 +46,13 @@ The container uses `docker/Dockerfile` (same as `docker_run.sh`).
 
 CMake is the build system. Presets are defined in `CMakePresets.json`:
 
-| Preset | Output directory | Flags |
-|--------|------------------|-------|
-| `release` | `build/release` | `-O3` |
-| `debug` | `build/debug` | `-O3 -g -fno-omit-frame-pointer` |
-| `asan` | `build/asan` | `-O3 -g -fno-omit-frame-pointer -fsanitize=address,undefined` |
-| `tests` | `build/tests` | inherits `asan` + `BUILD_TESTING=ON` |
+| Preset | Output directory | Description |
+|--------|------------------|-------------|
+| `release` | `build/release` | Optimized build |
+| `relwithdebinfo` | `build/relwithdebinfo` | Optimized build with debug symbols |
+| `debug` | `build/debug` | Unoptimized build with debug symbols |
+| `asan` | `build/asan` | Sanitizer-instrumented build |
+| `tests` | `build/tests` | Inherits `asan` with unit tests enabled |
 
 From inside the container (or locally with CMake installed):
 
