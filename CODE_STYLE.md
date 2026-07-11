@@ -32,6 +32,7 @@ This document defines the coding style for this C++ project. The goal is **reada
   - [Operator Overloading](#operator-overloading)
   - [Access Control](#access-control)
   - [Declaration Order](#declaration-order)
+  - [Definition Order](#definition-order)
 - [Functions](#functions)
   - [Inputs and Outputs](#inputs-and-outputs)
   - [Write Short Functions](#write-short-functions)
@@ -612,6 +613,62 @@ private:
 };
 ```
 
+### Definition Order
+
+- Keep source (.cpp) definition order consistent with the class declaration in the header.
+- Define constructors, destructors, and public member functions first.
+- Define protected and private member functions after all public member functions.
+- Within each access level, order function definitions top-down: a caller appears before its callees so the code reads naturally from high-level behavior to low-level details.
+
+```cpp
+// foo.h
+class Foo {
+public:
+    Foo();
+    void start();
+    void stop();
+
+private:
+    void do_start();
+    void connect();
+    void do_stop();
+    void disconnect();
+};
+
+// foo.cpp
+Foo::Foo()
+{
+}
+
+void Foo::start()
+{
+    do_start();
+}
+
+void Foo::stop()
+{
+    do_stop();
+}
+
+void Foo::do_start()
+{
+    connect();
+}
+
+void Foo::connect()
+{
+}
+
+void Foo::do_stop()
+{
+    disconnect();
+}
+
+void Foo::disconnect()
+{
+}
+```
+
 ---
 
 ## Functions
@@ -650,7 +707,7 @@ void get_id(Id &id, const std::string &name);
 - Use only for lambdas, template-heavy returns, or when it clearly improves readability.
 
 ```cpp
-template <typename T, typename U>
+template<typename T, typename U>
 auto add(T a, U b) -> decltype(a + b);
 ```
 
@@ -930,7 +987,7 @@ Widget &widget = *it->second;
 
 ```cpp
 // OK
-template <typename T>
+template<typename T>
 void f(T arg)
 {
 }
