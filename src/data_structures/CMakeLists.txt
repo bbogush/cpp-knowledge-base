@@ -1,2 +1,3 @@
 add_subdirectory(lru_cache)
 add_subdirectory(spsc_triple_buffer)
+add_subdirectory(spmc_seqlock)
