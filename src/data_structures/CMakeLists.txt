@@ -1,2 +1,2 @@
-add_subdirectory(cache)
+add_subdirectory(lru_cache)
 add_subdirectory(spsc_triple_buffer)
