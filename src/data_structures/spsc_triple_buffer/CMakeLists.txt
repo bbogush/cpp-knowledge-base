@@ -1,0 +1,4 @@
+add_executable(spsc_triple_buffer spsc_triple_buffer.cpp)
+
+target_link_libraries(spsc_triple_buffer PRIVATE project_options)
+target_link_libraries(spsc_triple_buffer PRIVATE project_features)
