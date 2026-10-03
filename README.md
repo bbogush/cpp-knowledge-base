@@ -49,7 +49,7 @@ CMake is the build system. Presets are defined in `CMakePresets.json`:
 | Preset | Output directory | Description |
 |--------|------------------|-------------|
 | `release` | `build/release` | Optimized build |
-| `relwithdebinfo` | `build/relwithdebinfo` | Optimized build with debug symbols |
+| `relwithdebinfo` | `build/relwithdebinfo` | Optimized build with debug symbols and frame pointers |
 | `debug` | `build/debug` | Unoptimized build with debug symbols |
 | `asan` | `build/asan` | Sanitizer-instrumented build |
 | `tests` | `build/tests` | Inherits `asan` with unit tests enabled |
