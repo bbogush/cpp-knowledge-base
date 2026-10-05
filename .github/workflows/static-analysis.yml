@@ -1,0 +1,32 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  clang-tidy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Same packages as docker/Dockerfile
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            clang-tidy \
+            cmake
+
+      - name: Configure
+        run: cmake --preset clang-tidy
+
+      - name: Run clang-tidy
+        run: cmake --build --preset clang-tidy-check

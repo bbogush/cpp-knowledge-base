@@ -1,0 +1,147 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+env:
+  # Median slowdown vs. the baseline that triggers a warning / fails the job
+  # Note: set big values because not reliable on shared runners.
+  WARN_THRESHOLD_PERCENT: 50
+  FAIL_THRESHOLD_PERCENT: 100
+
+jobs:
+  benchmarks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read # download the baseline artifact from an earlier run
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Same packages as docker/Dockerfile
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake
+
+      - name: Configure
+        run: cmake --preset benchmarks
+
+      - name: Build
+        run: cmake --build --preset benchmarks
+
+      # Writes build/benchmarks/benchmark-results/<binary>.json
+      - name: Run benchmarks
+        run: cmake --build --preset benchmarks-report
+
+      # Baseline: results of the latest successful run on master
+      - name: Download baseline
+        id: baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          run_id=$(gh run list --workflow benchmarks.yml --branch master --status success \
+            --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -z "$run_id" ]; then
+            echo "::notice::No successful master run to compare against"
+            exit 0
+          fi
+          if ! gh run download "$run_id" --name benchmark-results --dir baseline; then
+            echo "::notice::Baseline artifact of run $run_id is unavailable (expired?)"
+            exit 0
+          fi
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      # Compares the median of the repetitions: items_per_second where a benchmark
+      # reports it (the throughput benchmarks run for a fixed time), else real_time.
+      - name: Compare with baseline
+        if: steps.baseline.outputs.run_id != ''
+        env:
+          BASELINE_RUN_ID: ${{ steps.baseline.outputs.run_id }}
+          BASELINE_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.baseline.outputs.run_id }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, pathlib, sys
+
+          warn = float(os.environ["WARN_THRESHOLD_PERCENT"]) / 100
+          fail = float(os.environ["FAIL_THRESHOLD_PERCENT"]) / 100
+
+          def aggregates(path):
+              result = {}
+              for bench in json.loads(path.read_text())["benchmarks"]:
+                  if bench.get("run_type") == "aggregate":
+                      result.setdefault(bench["run_name"], {})[bench["aggregate_name"]] = bench
+              return result
+
+          def fmt(value, metric, unit):
+              if metric == "items_per_second":
+                  for limit, suffix in ((1e9, "G"), (1e6, "M"), (1e3, "k")):
+                      if value >= limit:
+                          return f"{value / limit:.2f}{suffix}/s"
+                  return f"{value:.2f}/s"
+              return f"{value:.4g} {unit}"
+
+          rows, failures = [], []
+          for result in sorted(pathlib.Path("build/benchmarks/benchmark-results").glob("*.json")):
+              baseline_path = pathlib.Path("baseline") / result.name
+              baseline = aggregates(baseline_path) if baseline_path.exists() else {}
+              for name, current in aggregates(result).items():
+                  median = current.get("median")
+                  if median is None:
+                      continue
+                  metric = "items_per_second" if "items_per_second" in median else "real_time"
+                  unit = median.get("time_unit", "ns")
+                  noise = current.get("cv", {}).get(metric)
+                  noise_text = f"{noise:.1%}" if noise is not None else "-"
+                  old = baseline.get(name, {}).get("median")
+                  if old is None or metric not in old:
+                      rows.append((result.stem, name, metric, "-", fmt(median[metric], metric, unit), "-", noise_text, "new"))
+                      continue
+                  # Positive change = faster, negative = slower
+                  if metric == "items_per_second":
+                      change = median[metric] / old[metric] - 1
+                  else:
+                      change = old[metric] / median[metric] - 1
+                  if change < -fail:
+                      status = "❌ fail"
+                      failures.append(f"{result.stem} {name}: {metric} median {change:+.1%}")
+                  elif change < -warn:
+                      status = "⚠️ warning"
+                      print(f"::warning title=Benchmark regression::{result.stem} {name}: {metric} median {change:+.1%}")
+                  else:
+                      status = "✅ ok"
+                  rows.append((result.stem, name, metric, fmt(old[metric], metric, unit),
+                               fmt(median[metric], metric, unit), f"{change:+.1%}", noise_text, status))
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write("## Benchmark comparison\n\n")
+              summary.write(f"Baseline: [run {os.environ['BASELINE_RUN_ID']}]({os.environ['BASELINE_URL']}). "
+                            "Medians of the repetitions; change is positive when faster. "
+                            f"Warning below -{warn:.0%}, failure below -{fail:.0%}. "
+                            "Noise is the current run's coefficient of variation.\n\n")
+              summary.write("| Binary | Benchmark | Metric | Baseline | Current | Change | Noise | Status |\n")
+              summary.write("|---|---|---|--:|--:|--:|--:|---|\n")
+              summary.writelines("| " + " | ".join(row) + " |\n" for row in rows)
+
+          for line in failures:
+              print(f"::error title=Benchmark regression::{line}")
+          sys.exit(1 if failures else 0)
+          EOF
+
+      - name: Upload JSON results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: build/benchmarks/benchmark-results
+          if-no-files-found: ignore
