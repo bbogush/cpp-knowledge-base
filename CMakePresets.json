@@ -70,6 +70,15 @@
       "cacheVariables": {
         "ENABLE_CLANG_TIDY": "ON"
       }
+    },
+    {
+      "name": "benchmarks",
+      "displayName": "Benchmarks (RelWithDebInfo + Google Benchmark)",
+      "inherits": "relwithdebinfo",
+      "binaryDir": "${sourceDir}/build/benchmarks",
+      "cacheVariables": {
+        "BUILD_BENCHMARKS": "ON"
+      }
     }
   ],
   "buildPresets": [
@@ -127,6 +136,27 @@
       "configurePreset": "clang-tidy",
       "targets": [
         "clang-tidy"
+      ]
+    },
+    {
+      "name": "clang-format-check",
+      "inherits": "default-build",
+      "configurePreset": "debug",
+      "targets": [
+        "clang-format-check"
+      ]
+    },
+    {
+      "name": "benchmarks",
+      "inherits": "default-build",
+      "configurePreset": "benchmarks"
+    },
+    {
+      "name": "benchmarks-report",
+      "inherits": "default-build",
+      "configurePreset": "benchmarks",
+      "targets": [
+        "benchmarks-report"
       ]
     }
   ],

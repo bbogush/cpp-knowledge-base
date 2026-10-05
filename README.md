@@ -55,6 +55,7 @@ CMake is the build system. Presets are defined in `CMakePresets.json`:
 | `tests` | `build/tests` | Inherits `asan` with unit tests enabled |
 | `coverage` | `build/coverage` | Inherits `debug` with tests and `src/` coverage instrumentation |
 | `clang-tidy` | `build/clang-tidy` | Inherits `debug` with static analysis on `src/` |
+| `benchmarks` | `build/benchmarks` | Inherits `relwithdebinfo` with Google Benchmark targets enabled |
 
 From inside the container (or locally with CMake installed):
 
@@ -77,7 +78,7 @@ cmake --preset asan
 cmake --build --preset asan
 ```
 
-Run an example executable:
+Run the executable:
 
 ```bash
 ./build/release/abstract_factory
@@ -101,6 +102,49 @@ Unit tests use [Google Test](https://github.com/google/googletest), fetched auto
 cmake --preset tests
 cmake --build --preset tests
 ctest --preset tests
+```
+
+## Benchmarks
+
+Benchmarks use [Google Benchmark](https://github.com/google/benchmark), fetched automatically by
+CMake. The `benchmarks` preset builds in `build/benchmarks` with `BUILD_BENCHMARKS` enabled and
+RelWithDebInfo (`-O3 -g -fno-omit-frame-pointer`) so timings stay optimized while
+`perf` can resolve symbols and unwind stacks.
+
+```bash
+cmake --preset benchmarks
+cmake --build --preset benchmarks
+cmake --build --preset benchmarks-report
+```
+
+The `benchmarks-report` preset builds any missing benchmark binaries and runs them all
+(equivalent to invoking each `*_benchmark` executable under `build/benchmarks/`).
+Each benchmark runs 5 times (set `-DBENCHMARK_REPETITIONS=N` at configure time); the console
+shows mean/median/stddev/cv, and each binary writes all runs plus aggregates to
+`build/benchmarks/benchmark-results/<binary>.json`.
+
+Benchmark binaries:
+
+| Binary | Measures |
+|--------|----------|
+| `my_component_add_benchmark` | `MyComponent::add` call throughput (calls/s) |
+
+```bash
+./build/benchmarks/my_component_add_benchmark
+```
+
+May need to disable CPU scaling:
+```bash
+sudo cpupower frequency-set -g performance
+```
+
+Optional Linux `perf` wrapping (may need elevated privileges):
+
+```bash
+sudo perf stat ./build/benchmarks/my_component_add_benchmark
+sudo perf record -g ./build/benchmarks/my_component_add_benchmark
+sudo perf report
+sudo perf report --stdio > perf_report.txt
 ```
 
 ## Coverage
@@ -145,14 +189,32 @@ cmake --preset clang-tidy -DCLANG_TIDY_JOBS=8
 cmake --build --preset clang-tidy-check
 ```
 
+## Clang-Format
+
+Formatting follows the project `.clang-format`. The `clang-format-check` build preset checks all
+git-tracked C++ files (`*.cpp`, `*.cc`, `*.h`, `*.hpp`) without modifying them and fails on any
+violation:
+
+```bash
+cmake --preset debug
+cmake --build --preset clang-format-check
+```
+
+The same check runs without configuring the project (as CI does):
+
+```bash
+cmake -P cmake/clang_format.cmake
+```
+
 ## Project layout
 
 ```
 .
 ├── CMakeLists.txt          # Root CMake project
-├── CMakePresets.json       # Release, debug, tests, ASan, coverage, and clang-tidy presets
+├── CMakePresets.json       # Release, debug, tests, ASan, coverage, clang-tidy, and benchmarks presets
 ├── src/                    # Application source
 ├── tests/                  # Google Test unit tests
+├── benchmarks/             # Google Benchmark targets
 ├── docker/                 # Docker image and helper scripts
 └── .devcontainer/          # VS Code Dev Container config
 ```

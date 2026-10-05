@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(cpp-knowledge-base VERSION 0.1.0 LANGUAGES CXX)
 
 option(BUILD_TESTING "Build unit tests" OFF)
+option(BUILD_BENCHMARKS "Build Google Benchmark targets" OFF)
 option(ENABLE_COVERAGE "Instrument src/ targets for code coverage" OFF)
 option(ENABLE_CLANG_TIDY "Add clang-tidy static analysis target" OFF)
 
@@ -27,10 +28,15 @@ if(BUILD_TESTING)
   add_subdirectory(tests)
 endif()
 
+if(BUILD_BENCHMARKS)
+  add_subdirectory(benchmarks)
+endif()
+
 if(ENABLE_COVERAGE AND BUILD_TESTING)
   add_custom_target(coverage-report
     COMMAND "${CMAKE_COMMAND}"
             -DCOVERAGE_BINARY_DIR=${CMAKE_BINARY_DIR}
+            -DCOVERAGE_SOURCE_DIR=${CMAKE_SOURCE_DIR}
             -P ${CMAKE_SOURCE_DIR}/cmake/coverage_report.cmake
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
     COMMENT "Generating src/ coverage report (lcov CLI + HTML)"
@@ -38,6 +44,16 @@ if(ENABLE_COVERAGE AND BUILD_TESTING)
     VERBATIM
   )
 endif()
+
+add_custom_target(clang-format-check
+  COMMAND "${CMAKE_COMMAND}"
+          -DCLANG_FORMAT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+          -P ${CMAKE_SOURCE_DIR}/cmake/clang_format.cmake
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  COMMENT "Checking clang-format on tracked C++ sources"
+  USES_TERMINAL
+  VERBATIM
+)
 
 if(ENABLE_CLANG_TIDY)
   set(CLANG_TIDY_JOBS 0 CACHE STRING "Parallel clang-tidy jobs (0 = auto-detect CPU count)")

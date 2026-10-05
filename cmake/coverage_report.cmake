@@ -9,6 +9,10 @@ if(NOT COVERAGE_BINARY_DIR)
   message(FATAL_ERROR "COVERAGE_BINARY_DIR is required")
 endif()
 
+if(NOT COVERAGE_SOURCE_DIR)
+  message(FATAL_ERROR "COVERAGE_SOURCE_DIR is required")
+endif()
+
 set(_coverage_info "${COVERAGE_BINARY_DIR}/coverage.info")
 set(_coverage_src_info "${COVERAGE_BINARY_DIR}/coverage-src.info")
 set(_coverage_report_dir "${COVERAGE_BINARY_DIR}/coverage-report")
@@ -24,7 +28,7 @@ execute_process(
 
 execute_process(
   COMMAND "${LCOV_EXECUTABLE}"
-          --extract "${_coverage_info}" "*/src/*"
+          --extract "${_coverage_info}" "${COVERAGE_SOURCE_DIR}/src/*"
           --ignore-errors mismatch,negative
           --output-file "${_coverage_src_info}"
   COMMAND_ERROR_IS_FATAL ANY
