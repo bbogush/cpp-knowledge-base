@@ -5,13 +5,14 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 
 class SupportHandler {
 public:
     virtual ~SupportHandler() = default;
     void set_next(std::shared_ptr<SupportHandler> next_handler)
     {
-        next = next_handler;
+        next = std::move(next_handler);
     }
 
     virtual void handle_request(const std::string &request) const
@@ -19,7 +20,7 @@ public:
         if (next) {
             next->handle_request(request);
         } else {
-            std::cout << "No handler available for request: " << request << std::endl;
+            std::cout << "No handler available for request: " << request << '\n';
         }
     }
 
@@ -32,7 +33,7 @@ public:
     void handle_request(const std::string &request) const override
     {
         if (request == "Level 1") {
-            std::cout << "Handled by Level One Support" << std::endl;
+            std::cout << "Handled by Level One Support" << '\n';
         } else {
             SupportHandler::handle_request(request);
         }
@@ -44,7 +45,7 @@ public:
     void handle_request(const std::string &request) const override
     {
         if (request == "Level 2") {
-            std::cout << "Handled by Level Two Support" << std::endl;
+            std::cout << "Handled by Level Two Support" << '\n';
         } else {
             SupportHandler::handle_request(request);
         }
@@ -56,7 +57,7 @@ public:
     void handle_request(const std::string &request) const override
     {
         if (request == "Level 3") {
-            std::cout << "Handled by Level Three Support" << std::endl;
+            std::cout << "Handled by Level Three Support" << '\n';
         } else {
             SupportHandler::handle_request(request);
         }

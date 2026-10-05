@@ -72,12 +72,12 @@ public:
     void visit(Circle &circle) override
     {
         double area = 3.14159 * circle.get_radius() * circle.get_radius();
-        std::cout << "Area of Circle: " << area << std::endl;
+        std::cout << "Area of Circle: " << area << '\n';
     }
     void visit(Rectangle &rectangle) override
     {
         double area = rectangle.get_width() * rectangle.get_height();
-        std::cout << "Area of Rectangle: " << area << std::endl;
+        std::cout << "Area of Rectangle: " << area << '\n';
     }
 };
 

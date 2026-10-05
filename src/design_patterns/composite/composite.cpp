@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <memory>
+#include <utility>
 #include <vector>
 
 class FileSystemComponent {
@@ -21,7 +22,7 @@ public:
 
     void display(int indent = 0) const override
     {
-        std::cout << std::string(indent, ' ') << "File: " << name << std::endl;
+        std::cout << std::string(indent, ' ') << "File: " << name << '\n';
     }
 
 private:
@@ -36,12 +37,12 @@ public:
 
     void add(std::shared_ptr<FileSystemComponent> component)
     {
-        components.push_back(component);
+        components.push_back(std::move(component));
     }
 
     void display(int indent = 0) const override
     {
-        std::cout << std::string(indent, ' ') << "Directory: " << name << std::endl;
+        std::cout << std::string(indent, ' ') << "Directory: " << name << '\n';
         for (const auto &component : components) {
             component->display(indent + 2);
         }

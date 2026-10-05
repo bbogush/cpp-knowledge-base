@@ -84,7 +84,7 @@ int main()
     auto it = collection.create_iterator();
 
     while (it->has_next()) {
-        std::cout << it->next() << std::endl;
+        std::cout << it->next() << '\n';
     }
 
     return 0;

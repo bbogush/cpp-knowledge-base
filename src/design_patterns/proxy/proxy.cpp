@@ -24,13 +24,13 @@ public:
             load_from_disk();
             loaded = true;
         }
-        std::cout << "Displaying " << filename << std::endl;
+        std::cout << "Displaying " << filename << '\n';
     }
 
 private:
     void load_from_disk()
     {
-        std::cout << "Loading " << filename << " from disk" << std::endl;
+        std::cout << "Loading " << filename << " from disk" << '\n';
     }
 
     std::string filename;

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <stack>
+#include <utility>
 
 class Command {
 public:
@@ -18,11 +19,11 @@ class Light {
 public:
     void on() const
     {
-        std::cout << "Light is ON" << std::endl;
+        std::cout << "Light is ON" << '\n';
     }
     void off() const
     {
-        std::cout << "Light is OFF" << std::endl;
+        std::cout << "Light is OFF" << '\n';
     }
 };
 
@@ -67,7 +68,7 @@ public:
     void submit(std::shared_ptr<Command> command)
     {
         command->execute();
-        history.push(command);
+        history.push(std::move(command));
     }
 
     void undo_last()

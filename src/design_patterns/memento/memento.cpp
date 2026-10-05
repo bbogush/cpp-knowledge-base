@@ -34,7 +34,7 @@ public:
 
     void show() const
     {
-        std::cout << content << std::endl;
+        std::cout << content << '\n';
     }
 
     std::shared_ptr<Memento> save() const

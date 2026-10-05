@@ -18,7 +18,7 @@ public:
     void render_circle(float x, float y, float radius) const override
     {
         std::cout << "OpenGL Renderer: Drawing circle at (" << x << ", " << y << ") with radius "
-                  << radius << std::endl;
+                  << radius << '\n';
     }
 };
 
@@ -27,7 +27,7 @@ public:
     void render_circle(float x, float y, float radius) const override
     {
         std::cout << "DirectX Renderer: Drawing circle at (" << x << ", " << y << ") with radius "
-                  << radius << std::endl;
+                  << radius << '\n';
     }
 };
 

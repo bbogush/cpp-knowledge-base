@@ -77,13 +77,13 @@ public:
 int main()
 {
     std::unique_ptr<Coffee> coffee = std::make_unique<SimpleCoffee>();
-    std::cout << coffee->get_description() << ": costs $" << coffee->get_cost() << std::endl;
+    std::cout << coffee->get_description() << ": costs $" << coffee->get_cost() << '\n';
 
     coffee = std::make_unique<MilkDecorator>(std::move(coffee));
-    std::cout << coffee->get_description() << ": costs $" << coffee->get_cost() << std::endl;
+    std::cout << coffee->get_description() << ": costs $" << coffee->get_cost() << '\n';
 
     coffee = std::make_unique<SugarDecorator>(std::move(coffee));
-    std::cout << coffee->get_description() << ": costs $" << coffee->get_cost() << std::endl;
+    std::cout << coffee->get_description() << ": costs $" << coffee->get_cost() << '\n';
 
     return 0;
 }

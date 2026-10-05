@@ -14,18 +14,18 @@ public:
     virtual void open(TcpConnection &connection)
     {
         (void)connection;
-        std::cout << "Invalid operation" << std::endl;
+        std::cout << "Invalid operation" << '\n';
     }
     virtual void close(TcpConnection &connection)
     {
         (void)connection;
-        std::cout << "Invalid operation" << std::endl;
+        std::cout << "Invalid operation" << '\n';
     }
     virtual void send(TcpConnection &connection, const std::string &data)
     {
         (void)connection;
         (void)data;
-        std::cout << "Invalid operation" << std::endl;
+        std::cout << "Invalid operation" << '\n';
     }
     virtual const char *name() const = 0;
 };
@@ -56,7 +56,7 @@ public:
 
     void print_state() const
     {
-        std::cout << "Current state: " << state->name() << std::endl;
+        std::cout << "Current state: " << state->name() << '\n';
     }
 
 private:
@@ -84,20 +84,20 @@ public:
 
 void ClosedState::open(TcpConnection &connection)
 {
-    std::cout << "Opening connection..." << std::endl;
+    std::cout << "Opening connection..." << '\n';
     connection.set_state(std::make_unique<OpenState>());
 }
 
 void OpenState::close(TcpConnection &connection)
 {
-    std::cout << "Closing connection..." << std::endl;
+    std::cout << "Closing connection..." << '\n';
     connection.set_state(std::make_unique<ClosedState>());
 }
 
 void OpenState::send(TcpConnection &connection, const std::string &data)
 {
     (void)connection;
-    std::cout << "Sending data: " << data << std::endl;
+    std::cout << "Sending data: " << data << '\n';
 }
 
 int main()

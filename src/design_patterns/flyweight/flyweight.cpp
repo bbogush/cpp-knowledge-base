@@ -24,7 +24,7 @@ public:
     void draw(int x, int y) const override
     {
         std::cout << "Character: " << symbol << ", Font: " << font << ", Size: " << size
-                  << ", Position: (" << x << ", " << y << ")" << std::endl;
+                  << ", Position: (" << x << ", " << y << ")" << '\n';
     }
 
 private:
@@ -43,10 +43,10 @@ public:
         if (pool.find(key) == pool.end()) {
             pool[key] = std::make_shared<ConcreteCharacter>(symbol, font, size);
             std::cout << "Creating new character: " << symbol << ", Font: " << font
-                      << ", Size: " << size << std::endl;
+                      << ", Size: " << size << '\n';
         } else {
             std::cout << "Reusing existing character: " << symbol << ", Font: " << font
-                      << ", Size: " << size << std::endl;
+                      << ", Size: " << size << '\n';
         }
 
         return pool[key];

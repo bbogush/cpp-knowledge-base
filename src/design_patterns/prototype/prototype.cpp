@@ -27,7 +27,7 @@ public:
 
     void draw() const override
     {
-        std::cout << "Drawing a circle with radius " << radius << std::endl;
+        std::cout << "Drawing a circle with radius " << radius << '\n';
     }
 
 private:

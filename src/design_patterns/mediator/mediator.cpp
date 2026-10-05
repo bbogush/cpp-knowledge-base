@@ -19,7 +19,7 @@ public:
 
 class User {
 public:
-    User(std::string name, std::shared_ptr<ChatMediator> chat_mediator) :
+    User(std::string name, const std::shared_ptr<ChatMediator> &chat_mediator) :
         name(std::move(name)), mediator(chat_mediator)
     {
     }
@@ -30,13 +30,13 @@ public:
         if (auto locked_mediator = mediator.lock()) {
             locked_mediator->send_message(msg, this);
         } else {
-            std::cerr << "Mediator is no longer available." << std::endl;
+            std::cerr << "Mediator is no longer available." << '\n';
         }
     }
 
     virtual void receive(const std::string &msg)
     {
-        std::cout << name << " received: " << msg << std::endl;
+        std::cout << name << " received: " << msg << '\n';
     }
 
 protected:

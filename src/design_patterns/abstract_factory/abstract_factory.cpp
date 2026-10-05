@@ -22,7 +22,7 @@ class WindowsButton : public Button {
 public:
     void render() const override
     {
-        std::cout << "Rendering Windows Button" << std::endl;
+        std::cout << "Rendering Windows Button" << '\n';
     }
 };
 
@@ -30,7 +30,7 @@ class WindowsCheckbox : public Checkbox {
 public:
     void render() const override
     {
-        std::cout << "Rendering Windows Checkbox" << std::endl;
+        std::cout << "Rendering Windows Checkbox" << '\n';
     }
 };
 
@@ -38,7 +38,7 @@ class LinuxButton : public Button {
 public:
     void render() const override
     {
-        std::cout << "Rendering Linux Button" << std::endl;
+        std::cout << "Rendering Linux Button" << '\n';
     }
 };
 
@@ -46,7 +46,7 @@ class LinuxCheckbox : public Checkbox {
 public:
     void render() const override
     {
-        std::cout << "Rendering Linux Checkbox" << std::endl;
+        std::cout << "Rendering Linux Checkbox" << '\n';
     }
 };
 
