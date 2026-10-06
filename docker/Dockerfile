@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     clang-tidy \
     cmake \
     git \
-    lcov
+    lcov \
+    ninja-build
 
 # Use a non-root user ubuntu
 ARG USERNAME=ubuntu

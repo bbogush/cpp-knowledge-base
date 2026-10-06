@@ -1,11 +1,11 @@
 name: Unit Tests
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  workflow_dispatch:
+#on:
+#  push:
+#    branches: [master]
+#  pull_request:
+#    branches: [master]
+#  workflow_dispatch:
 
 jobs:
   unit-tests:
@@ -22,7 +22,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
-            cmake
+            cmake \
+            ninja-build
 
       - name: Configure
         run: cmake --preset tests

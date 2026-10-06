@@ -26,7 +26,8 @@ jobs:
           sudo apt-get install -y \
             build-essential \
             cmake \
-            lcov
+            lcov \
+            ninja-build
 
       - name: Configure
         run: cmake --preset coverage

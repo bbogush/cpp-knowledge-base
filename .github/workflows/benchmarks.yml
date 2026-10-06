@@ -1,11 +1,11 @@
 name: Benchmarks
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-  workflow_dispatch:
+#on:
+#  push:
+#    branches: [master]
+#  pull_request:
+#    branches: [master]
+#  workflow_dispatch:
 
 env:
   # Median slowdown vs. the baseline that triggers a warning / fails the job
@@ -31,7 +31,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
-            cmake
+            cmake \
+            ninja-build
 
       - name: Configure
         run: cmake --preset benchmarks
