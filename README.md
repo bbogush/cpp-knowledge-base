@@ -119,19 +119,8 @@ cmake --build --preset benchmarks-report
 
 The `benchmarks-report` preset builds any missing benchmark binaries and runs them all
 (equivalent to invoking each `*_benchmark` executable under `build/benchmarks/`).
-Each benchmark runs 5 times (set `-DBENCHMARK_REPETITIONS=N` at configure time); the console
-shows mean/median/stddev/cv, and each binary writes all runs plus aggregates to
+Each benchmark runs once, and each binary writes its results to
 `build/benchmarks/benchmark-results/<binary>.json`.
-
-Benchmark binaries:
-
-| Binary | Measures |
-|--------|----------|
-| `my_component_add_benchmark` | `MyComponent::add` call throughput (calls/s) |
-
-```bash
-./build/benchmarks/my_component_add_benchmark
-```
 
 May need to disable CPU scaling:
 ```bash
