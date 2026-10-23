@@ -96,7 +96,7 @@ public:
 
 private:
     T *ptr = nullptr;
-    std::size_t *ref_count = nullptr;
+    size_t *ref_count = nullptr;
 
     void release()
     {
