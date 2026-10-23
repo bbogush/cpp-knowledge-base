@@ -1,3 +1,4 @@
+add_subdirectory(fixed_ring_buffer)
 add_subdirectory(lru_cache)
-add_subdirectory(spsc_triple_buffer)
 add_subdirectory(spmc_seqlock)
+add_subdirectory(spsc_triple_buffer)

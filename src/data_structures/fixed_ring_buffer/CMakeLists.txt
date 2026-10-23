@@ -1,0 +1,5 @@
+add_executable(fixed_ring_buffer fixed_ring_buffer.cpp)
+
+target_link_libraries(fixed_ring_buffer PRIVATE project_options)
+target_link_libraries(fixed_ring_buffer PRIVATE project_features)
+
