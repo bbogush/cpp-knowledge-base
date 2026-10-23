@@ -1,11 +1,11 @@
 name: Benchmarks
 
-#on:
+on:
 #  push:
 #    branches: [master]
 #  pull_request:
 #    branches: [master]
-#  workflow_dispatch:
+  workflow_dispatch:
 
 env:
   # Median slowdown vs. the baseline that triggers a warning / fails the job
