@@ -28,7 +28,7 @@ It is useful when object creation is expensive or complex, and a similar object 
 ## Advantages
 
 - Avoids the cost of re-initialising objects from scratch when a similar object already exists.
-- Adding new concrete types requires no changes to the client — just implement `clone()`.
+- Adding new concrete types requires no changes to the client - just implement `clone()`.
 - Hides the complexity of object creation behind a uniform interface.
 
 ---

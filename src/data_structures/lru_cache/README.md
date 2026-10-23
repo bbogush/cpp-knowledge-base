@@ -4,7 +4,7 @@
 
 An **LRU (Least Recently Used) Cache** is a fixed-capacity data structure that evicts the **least recently used** entry when the cache is full and a new entry needs to be inserted.
 
-It is commonly used in systems where you want fast access to frequently used data but memory is limited — e.g., CPU caches, database query caches, web browser history.
+It is commonly used in systems where you want fast access to frequently used data but memory is limited - e.g., CPU caches, database query caches, web browser history.
 
 ---
 

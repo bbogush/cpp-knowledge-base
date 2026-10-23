@@ -11,7 +11,7 @@ It is especially useful when an object has many optional parameters or requires 
 
 - **Step-by-Step Construction**: The object is assembled incrementally through discrete setter/configuration calls rather than a single constructor.
 - **Fluent Interface**: Builder methods return a reference to the builder itself, enabling readable method chaining.
-- **Encapsulation of Construction Logic**: The client never directly sets fields on the product — all construction goes through the builder.
+- **Encapsulation of Construction Logic**: The client never directly sets fields on the product - all construction goes through the builder.
 
 ---
 
@@ -27,7 +27,7 @@ It is especially useful when an object has many optional parameters or requires 
 
 ## Advantages
 
-- Avoids telescoping constructors — optional parameters are set only when needed.
+- Avoids telescoping constructors - optional parameters are set only when needed.
 - The same builder interface can produce different product configurations.
 - Construction and representation are cleanly separated.
 

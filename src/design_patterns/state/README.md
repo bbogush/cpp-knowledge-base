@@ -3,7 +3,7 @@
 ## Description
 
 The **State** pattern allows an object to alter its behavior when its internal state changes.
-The object will appear to change its class — each state is encapsulated in its own class, and the context delegates behavior to the current state object.
+The object will appear to change its class - each state is encapsulated in its own class, and the context delegates behavior to the current state object.
 
 ---
 
@@ -29,7 +29,7 @@ The object will appear to change its class — each state is encapsulated in its
 ## Advantages
 
 - Eliminates large conditional branches (`if/switch` on state) by distributing behavior across state classes.
-- Adding a new state requires only a new class — no changes to the context or other states.
+- Adding a new state requires only a new class - no changes to the context or other states.
 - Each state class is small and focused, making individual states easy to test.
 
 ---
@@ -38,7 +38,7 @@ The object will appear to change its class — each state is encapsulated in its
 
 - Can lead to many small classes if the number of states is large.
 - State transitions are scattered across state classes, which can make the overall flow harder to trace.
-- Sharing state objects between contexts requires care (not applicable here — each context owns its state via `unique_ptr`).
+- Sharing state objects between contexts requires care (not applicable here - each context owns its state via `unique_ptr`).
 
 ---
 

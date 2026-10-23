@@ -3,7 +3,7 @@
 ## Description
 
 The **Proxy** pattern provides a surrogate or placeholder object that controls access to another object.
-The proxy sits in front of the real subject and intercepts requests, allowing it to perform additional work — such as lazy initialization, access control, logging, or caching — before or after forwarding the call.
+The proxy sits in front of the real subject and intercepts requests, allowing it to perform additional work - such as lazy initialization, access control, logging, or caching - before or after forwarding the call.
 
 ---
 

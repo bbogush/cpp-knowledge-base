@@ -10,7 +10,7 @@ It groups factories that share a common theme, ensuring products from one factor
 ## Key Features
 
 - **Family Consistency**: All products created by a concrete factory belong to the same variant, guaranteeing compatibility.
-- **Open/Closed Principle**: New product families are added by implementing a new concrete factory — existing client code is untouched.
+- **Open/Closed Principle**: New product families are added by implementing a new concrete factory - existing client code is untouched.
 - **Abstraction Over Creation**: The client works with factories and products solely through abstract interfaces, unaware of any concrete type.
 
 ---
@@ -32,7 +32,7 @@ It groups factories that share a common theme, ensuring products from one factor
 ## Advantages
 
 - Guarantees that products from a single factory are mutually compatible.
-- Isolates concrete classes from client code — clients depend only on abstractions.
+- Isolates concrete classes from client code - clients depend only on abstractions.
 - Switching product families requires changing only the concrete factory.
 
 ---

@@ -30,7 +30,7 @@ It is commonly used to implement undo/redo functionality.
 
 - Provides a clean undo mechanism without exposing internal state.
 - Keeps the originator's implementation independent of how history is managed.
-- The caretaker is simple — it only stores and returns opaque snapshots.
+- The caretaker is simple - it only stores and returns opaque snapshots.
 
 ---
 

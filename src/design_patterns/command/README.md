@@ -3,7 +3,7 @@
 ## Description
 
 The **Command** pattern encapsulates a request as an object, allowing it to be parameterized, queued, logged, or undone.
-The invoker is decoupled from the object that performs the action — it only knows how to call `execute()` on a command.
+The invoker is decoupled from the object that performs the action - it only knows how to call `execute()` on a command.
 
 ---
 

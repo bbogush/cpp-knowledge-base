@@ -30,7 +30,7 @@ It separates an algorithm from the object structure it operates on by placing th
 ## How It Works
 
 1. The client calls `element.accept(visitor)`.
-2. Inside `accept`, the element calls `visitor.visit(*this)` — passing itself.
+2. Inside `accept`, the element calls `visitor.visit(*this)` - passing itself.
 3. Because `*this` is a concrete type, C++ static overload resolution picks the right `visit()` overload.
 4. The visitor executes its operation on the element.
 

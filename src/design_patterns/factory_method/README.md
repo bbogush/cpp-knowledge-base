@@ -10,7 +10,7 @@ It delegates object creation to subclasses, decoupling the client code from the 
 ## Key Features
 
 - **Deferred Instantiation**: The creator class defers object creation to subclasses via a virtual factory method.
-- **Open/Closed Principle**: New product types are added by subclassing the creator — existing code is untouched.
+- **Open/Closed Principle**: New product types are added by subclassing the creator - existing code is untouched.
 - **Polymorphic Creation**: The client works with products through an abstract interface, unaware of the concrete type.
 
 ---
@@ -31,14 +31,14 @@ It delegates object creation to subclasses, decoupling the client code from the 
 
 - Eliminates tight coupling between creator and concrete products.
 - Single Responsibility: product creation is isolated in one place.
-- Easy to extend — add a new transport type without touching existing classes.
+- Easy to extend - add a new transport type without touching existing classes.
 
 ---
 
 ## Disadvantages
 
 - Requires a new subclass per product type, which can grow the class hierarchy.
-- Adds indirection — may be over-engineering for simple object creation.
+- Adds indirection - may be over-engineering for simple object creation.
 
 ---
 

@@ -20,7 +20,7 @@ Instead of components communicating directly with each other, they communicate t
 | Role | In `mediator.cpp` | Responsibility |
 |---|---|---|
 | Mediator Interface | `ChatMediator` | Declares `send_message()` and `add_user()` for coordinating colleagues |
-| Concrete Mediator | `ChatRoom` | Implements message routing — forwards each message to all users except the sender |
+| Concrete Mediator | `ChatRoom` | Implements message routing - forwards each message to all users except the sender |
 | Colleague | `User` | Holds a `weak_ptr` to the mediator; sends and receives messages only through it |
 | Client | `main()` | Creates the mediator, registers users, and triggers communication |
 

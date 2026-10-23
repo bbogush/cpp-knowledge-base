@@ -18,7 +18,7 @@ It is useful for implementing event-driven systems, e.g., UI event handling, pub
 ## Advantages
 
 - Decouples the publisher from its observers.
-- Supports open/closed principle — new observer types can be added without changing the publisher.
+- Supports open/closed principle - new observer types can be added without changing the publisher.
 - Enables event-driven architectures naturally.
 
 ---

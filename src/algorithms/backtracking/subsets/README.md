@@ -4,7 +4,7 @@
 
 **Subsets** (also called the power set problem) generates all possible subsets of a given set of distinct integers using **backtracking**.
 
-At each recursive call, the current subset is recorded. The algorithm then iterates over the remaining elements, choosing one, recursing deeper, and undoing the choice — the classic **choose / explore / undo** pattern.
+At each recursive call, the current subset is recorded. The algorithm then iterates over the remaining elements, choosing one, recursing deeper, and undoing the choice - the classic **choose / explore / undo** pattern.
 
 ---
 
@@ -23,17 +23,17 @@ At each recursive call, the current subset is recorded. The algorithm then itera
 Input: `[1, 2, 3]`
 
 ```
-backtrack(index=0, subset=[])     → record []
-  choose 1 → backtrack(index=1, subset=[1])   → record [1]
-    choose 2 → backtrack(index=2, subset=[1,2]) → record [1,2]
-      choose 3 → backtrack(index=3, subset=[1,2,3]) → record [1,2,3]
-    choose 3 → backtrack(index=3, subset=[1,3]) → record [1,3]
-  choose 2 → backtrack(index=2, subset=[2])   → record [2]
-    choose 3 → backtrack(index=3, subset=[2,3]) → record [2,3]
-  choose 3 → backtrack(index=3, subset=[3])   → record [3]
+backtrack(index=0, subset=[])     -> record []
+  choose 1 -> backtrack(index=1, subset=[1])   -> record [1]
+    choose 2 -> backtrack(index=2, subset=[1,2]) -> record [1,2]
+      choose 3 -> backtrack(index=3, subset=[1,2,3]) -> record [1,2,3]
+    choose 3 -> backtrack(index=3, subset=[1,3]) -> record [1,3]
+  choose 2 -> backtrack(index=2, subset=[2])   -> record [2]
+    choose 3 -> backtrack(index=3, subset=[2,3]) -> record [2,3]
+  choose 3 -> backtrack(index=3, subset=[3])   -> record [3]
 ```
 
-Output (8 subsets = 2³):
+Output (8 subsets = 2^3):
 ```
 [ ]
 [ 1 ]
@@ -51,8 +51,8 @@ Output (8 subsets = 2³):
 
 | | Complexity |
 |---|---|
-| Time | O(n · 2ⁿ) — 2ⁿ subsets, each copied in O(n) |
-| Space | O(n) — recursion depth and the current subset buffer |
+| Time | O(n * 2^n) - 2^n subsets, each copied in O(n) |
+| Space | O(n) - recursion depth and the current subset buffer |
 
 ---
 
