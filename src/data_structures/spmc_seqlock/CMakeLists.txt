@@ -2,4 +2,3 @@ add_executable(spmc_seqlock spmc_seqlock.cpp)
 
 target_link_libraries(spmc_seqlock PRIVATE project_options)
 target_link_libraries(spmc_seqlock PRIVATE project_features)
-

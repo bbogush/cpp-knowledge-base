@@ -2,4 +2,3 @@ add_executable(factory_method factory_method.cpp)
 
 target_link_libraries(factory_method PRIVATE project_options)
 target_link_libraries(factory_method PRIVATE project_features)
-

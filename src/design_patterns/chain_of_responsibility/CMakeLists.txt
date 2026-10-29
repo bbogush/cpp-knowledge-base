@@ -2,4 +2,3 @@ add_executable(chain_of_responsibility chain_of_responsibility.cpp)
 
 target_link_libraries(chain_of_responsibility PRIVATE project_options)
 target_link_libraries(chain_of_responsibility PRIVATE project_features)
-
