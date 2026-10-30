@@ -2,7 +2,7 @@
 
 C++ knowledge base project.
 
-**Stack:** C++20, CMake 3.20+, Ubuntu 24.04 (GCC, CMake, Git)
+**Stack:** C++20, CMake 3.20+, Ubuntu 24.04 (GCC, clang-tidy, CMake, Git, Node.js for prettier)
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ Clean up when done:
 
 ## VS Code Dev Containers
 
-As an alternative to starting Docker manually, VS Code can configure the environment automatically using the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. It opens the project in the same Docker image and installs the C++ and CMake extensions.
+As an alternative to starting Docker manually, VS Code can configure the environment automatically using the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension. It opens the project in the same Docker image and installs the C++, CMake and Prettier extensions.
 
 1. Open the project in VS Code
 2. **Ctrl+Shift+P** -> **Dev Containers: Reopen in Container**
@@ -187,13 +187,17 @@ any violation:
   `.clang-format`.
 - CMake files (`CMakeLists.txt`, `*.cmake`) with cmake-format, using the project
   `.cmake-format.yaml`.
+- JSON, YAML and Markdown files (`*.json`, `*.yml`, `*.yaml`, `*.md`) with prettier, using the
+  project `.prettierrc.json`. The pinned prettier version is fetched with `npx`, so Node.js is
+  required (installed in the Docker image).
 
 ```bash
 cmake --preset debug
 cmake --build --preset format-check
 ```
 
-The same check runs without configuring the project (as CI does):
+The same check runs without configuring the project (as the `Format` CI workflow does on every
+push and pull request to `master`):
 
 ```bash
 cmake -P cmake/format.cmake
