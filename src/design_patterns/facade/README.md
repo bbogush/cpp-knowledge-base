@@ -2,26 +2,28 @@
 
 ## Description
 
-The **Facade** pattern provides a simplified interface to a complex subsystem.
-It hides the complexity of the subsystem behind a single unified interface, making the subsystem easier to use.
+The **Facade** pattern provides a simplified interface to a complex subsystem. It hides the
+complexity of the subsystem behind a single unified interface, making the subsystem easier to use.
 
 ---
 
 ## Key Features
 
-- **Simplified Interface**: Exposes a high-level interface that makes the subsystem easier to use without exposing its internal complexity.
+- **Simplified Interface**: Exposes a high-level interface that makes the subsystem easier to use
+  without exposing its internal complexity.
 - **Loose Coupling**: Clients depend only on the `Facade`, not on individual subsystem classes.
-- **Single Entry Point**: Centralizes interaction with the subsystem, reducing the number of objects clients deal with.
+- **Single Entry Point**: Centralizes interaction with the subsystem, reducing the number of objects
+  clients deal with.
 
 ---
 
 ## Participants
 
-| Role | In `facade.cpp` | Responsibility |
-|---|---|---|
-| `Facade` | `HomeTheaterFacade` | Provides `watch_movie()` and `end_movie()` high-level operations |
+| Role              | In `facade.cpp`         | Responsibility                                                                                    |
+| ----------------- | ----------------------- | ------------------------------------------------------------------------------------------------- |
+| `Facade`          | `HomeTheaterFacade`     | Provides `watch_movie()` and `end_movie()` high-level operations                                  |
 | Subsystem classes | `Player`, `SoundSystem` | Implement low-level operations (`on()`, `off()`, `play()`, `set_volume()`); unaware of the facade |
-| Client | `main()` | Uses only `HomeTheaterFacade`, unaware of `Player` or `SoundSystem` internals |
+| Client            | `main()`                | Uses only `HomeTheaterFacade`, unaware of `Player` or `SoundSystem` internals                     |
 
 ---
 

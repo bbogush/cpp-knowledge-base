@@ -2,9 +2,12 @@
 
 ## Description
 
-**Subsets** (also called the power set problem) generates all possible subsets of a given set of distinct integers using **backtracking**.
+**Subsets** (also called the power set problem) generates all possible subsets of a given set of
+distinct integers using **backtracking**.
 
-At each recursive call, the current subset is recorded. The algorithm then iterates over the remaining elements, choosing one, recursing deeper, and undoing the choice - the classic **choose / explore / undo** pattern.
+At each recursive call, the current subset is recorded. The algorithm then iterates over the
+remaining elements, choosing one, recursing deeper, and undoing the choice - the classic **choose /
+explore / undo** pattern.
 
 ---
 
@@ -34,6 +37,7 @@ backtrack(index=0, subset=[])     -> record []
 ```
 
 Output (8 subsets = 2^3):
+
 ```
 [ ]
 [ 1 ]
@@ -49,15 +53,18 @@ Output (8 subsets = 2^3):
 
 ## Complexity
 
-| | Complexity |
-|---|---|
-| Time | O(n * 2^n) - 2^n subsets, each copied in O(n) |
+|       | Complexity                                           |
+| ----- | ---------------------------------------------------- |
+| Time  | O(n \* 2^n) - 2^n subsets, each copied in O(n)       |
 | Space | O(n) - recursion depth and the current subset buffer |
 
 ---
 
 ## Key Properties
 
-- **No duplicates**: advancing the start index to `i + 1` ensures each element is used at most once per subset and each subset appears exactly once.
-- **All sizes covered**: subsets of every size from 0 to n are produced naturally without extra logic.
-- **In-place state**: a single `subset` vector is mutated and restored, avoiding per-call allocations.
+- **No duplicates**: advancing the start index to `i + 1` ensures each element is used at most once
+  per subset and each subset appears exactly once.
+- **All sizes covered**: subsets of every size from 0 to n are produced naturally without extra
+  logic.
+- **In-place state**: a single `subset` vector is mutated and restored, avoiding per-call
+  allocations.

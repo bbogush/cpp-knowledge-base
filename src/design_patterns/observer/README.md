@@ -2,8 +2,10 @@
 
 ## Description
 
-The **Observer** pattern defines a **one-to-many dependency** between objects so that when one object (the **Publisher**) changes state, all its dependents (**Observers**) are notified and updated automatically.
-It is useful for implementing event-driven systems, e.g., UI event handling, pub/sub messaging, or reactive data bindings.
+The **Observer** pattern defines a **one-to-many dependency** between objects so that when one
+object (the **Publisher**) changes state, all its dependents (**Observers**) are notified and
+updated automatically. It is useful for implementing event-driven systems, e.g., UI event handling,
+pub/sub messaging, or reactive data bindings.
 
 ---
 

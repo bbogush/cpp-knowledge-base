@@ -2,30 +2,34 @@
 
 ## Description
 
-The **Abstract Factory** pattern provides an interface for creating **families of related objects** without specifying their concrete classes.
-It groups factories that share a common theme, ensuring products from one factory are compatible with each other.
+The **Abstract Factory** pattern provides an interface for creating **families of related objects**
+without specifying their concrete classes. It groups factories that share a common theme, ensuring
+products from one factory are compatible with each other.
 
 ---
 
 ## Key Features
 
-- **Family Consistency**: All products created by a concrete factory belong to the same variant, guaranteeing compatibility.
-- **Open/Closed Principle**: New product families are added by implementing a new concrete factory - existing client code is untouched.
-- **Abstraction Over Creation**: The client works with factories and products solely through abstract interfaces, unaware of any concrete type.
+- **Family Consistency**: All products created by a concrete factory belong to the same variant,
+  guaranteeing compatibility.
+- **Open/Closed Principle**: New product families are added by implementing a new concrete factory -
+  existing client code is untouched.
+- **Abstraction Over Creation**: The client works with factories and products solely through
+  abstract interfaces, unaware of any concrete type.
 
 ---
 
 ## Participants
 
-| Role | In `abstract_factory.cpp` | Responsibility |
-|---|---|---|
-| Abstract Product A | `Button` | Abstract interface for buttons |
-| Abstract Product B | `Checkbox` | Abstract interface for checkboxes |
-| Concrete Products A | `WindowsButton`, `LinuxButton` | Platform-specific button implementations |
-| Concrete Products B | `WindowsCheckbox`, `LinuxCheckbox` | Platform-specific checkbox implementations |
-| Abstract Factory | `GUIFactory` | Declares `create_button()` and `create_checkbox()` factory methods |
-| Concrete Factories | `WindowsFactory`, `LinuxFactory` | Create matching GUI widgets for a specific platform |
-| Client | `main()` | Uses the abstract factory and products without knowing their concrete types |
+| Role                | In `abstract_factory.cpp`          | Responsibility                                                              |
+| ------------------- | ---------------------------------- | --------------------------------------------------------------------------- |
+| Abstract Product A  | `Button`                           | Abstract interface for buttons                                              |
+| Abstract Product B  | `Checkbox`                         | Abstract interface for checkboxes                                           |
+| Concrete Products A | `WindowsButton`, `LinuxButton`     | Platform-specific button implementations                                    |
+| Concrete Products B | `WindowsCheckbox`, `LinuxCheckbox` | Platform-specific checkbox implementations                                  |
+| Abstract Factory    | `GUIFactory`                       | Declares `create_button()` and `create_checkbox()` factory methods          |
+| Concrete Factories  | `WindowsFactory`, `LinuxFactory`   | Create matching GUI widgets for a specific platform                         |
+| Client              | `main()`                           | Uses the abstract factory and products without knowing their concrete types |
 
 ---
 
@@ -39,7 +43,8 @@ It groups factories that share a common theme, ensuring products from one factor
 
 ## Disadvantages
 
-- Adding a new product type requires changing the abstract factory interface and all its concrete implementations.
+- Adding a new product type requires changing the abstract factory interface and all its concrete
+  implementations.
 - Can lead to a large number of classes when there are many products and variants.
 
 ---

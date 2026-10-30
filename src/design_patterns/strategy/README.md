@@ -2,8 +2,8 @@
 
 ## Description
 
-The **Strategy** pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable.
-It lets the algorithm vary independently from the clients that use it.
+The **Strategy** pattern defines a family of algorithms, encapsulates each one, and makes them
+interchangeable. It lets the algorithm vary independently from the clients that use it.
 
 ---
 
@@ -17,12 +17,12 @@ It lets the algorithm vary independently from the clients that use it.
 
 ## Participants
 
-| Role | In `strategy.cpp` | Responsibility |
-|---|---|---|
-| `Strategy` | `Strategy` | Declares the common `execute()` interface |
-| `ConcreteStrategy` | `AddStrategy`, `SubtractStrategy` | Implements a specific algorithm |
-| `Context` | `Context` | Holds a strategy and delegates work to it via `run()` |
-| Client | `main()` | Selects and injects the desired strategy into the context |
+| Role               | In `strategy.cpp`                 | Responsibility                                            |
+| ------------------ | --------------------------------- | --------------------------------------------------------- |
+| `Strategy`         | `Strategy`                        | Declares the common `execute()` interface                 |
+| `ConcreteStrategy` | `AddStrategy`, `SubtractStrategy` | Implements a specific algorithm                           |
+| `Context`          | `Context`                         | Holds a strategy and delegates work to it via `run()`     |
+| Client             | `main()`                          | Selects and injects the desired strategy into the context |
 
 ---
 
