@@ -3,6 +3,7 @@
  *  it under the terms of the Apache License Version 2.0.
  */
 
+#include <cstddef>
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -11,7 +12,7 @@
 class FileSystemComponent {
 public:
     virtual ~FileSystemComponent() = default;
-    virtual void display(int indent = 0) const = 0;
+    virtual void display(size_t indent = 0) const = 0;
 };
 
 class File : public FileSystemComponent {
@@ -20,7 +21,7 @@ public:
     {
     }
 
-    void display(int indent = 0) const override
+    void display(size_t indent = 0) const override
     {
         std::cout << std::string(indent, ' ') << "File: " << name << '\n';
     }
@@ -40,7 +41,7 @@ public:
         components.push_back(std::move(component));
     }
 
-    void display(int indent = 0) const override
+    void display(size_t indent = 0) const override
     {
         std::cout << std::string(indent, ' ') << "Directory: " << name << '\n';
         for (const auto &component : components) {
