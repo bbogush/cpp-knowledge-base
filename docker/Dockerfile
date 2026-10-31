@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
     lcov \
     ninja-build \
     nodejs \
-    npm
+    npm \
+    shfmt
 
 # Use a non-root user ubuntu
 ARG USERNAME=ubuntu
