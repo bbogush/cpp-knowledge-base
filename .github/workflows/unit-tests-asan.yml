@@ -1,14 +1,14 @@
-name: Unit Tests
+name: Unit Tests (ASan)
 
 on:
-  #  push:
-  #    branches: [master]
-  #  pull_request:
-  #    branches: [master]
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
   workflow_dispatch:
 
 jobs:
-  unit-tests:
+  unit-tests-asan:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
 
@@ -23,13 +23,18 @@ jobs:
           sudo apt-get install -y \
             build-essential \
             cmake \
-            ninja-build
+            ninja-build \
+            libboost-dev \
+            libboost-system-dev \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            liburing-dev
 
       - name: Configure
-        run: cmake --preset tests
+        run: cmake --preset tests-asan
 
       - name: Build
-        run: cmake --build --preset tests
+        run: cmake --build --preset tests-asan
 
       - name: Test
-        run: ctest --preset tests
+        run: ctest --preset tests-asan
