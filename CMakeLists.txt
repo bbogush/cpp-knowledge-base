@@ -9,22 +9,29 @@ option(BUILD_BENCHMARKS "Build Google Benchmark targets" OFF)
 option(ENABLE_COVERAGE "Instrument src/ targets for code coverage" OFF)
 option(ENABLE_CLANG_TIDY "Add clang-tidy static analysis target" OFF)
 option(ENABLE_TSAN "Relax -Werror for ThreadSanitizer-incompatible atomics" OFF)
+option(ENABLE_VALGRIND "Run unit tests under Valgrind Memcheck" OFF)
 
 if(ENABLE_CLANG_TIDY)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
 if(ENABLE_TSAN)
-  # Ubuntu 24.04 uses vm.mmap_rnd_bits=32. GCC TSan cannot place its shadow memory then and aborts
-  # with "unexpected memory mapping". Disable ASLR for CMake-driven runs of TSan binaries (gtest
-  # discovery and ctest).
+  # "atomic_thread_fence" is not supported with "-fsanitize=thread"
   add_compile_options(-Wno-error=tsan)
-  find_program(SETARCH_EXECUTABLE setarch REQUIRED)
-  execute_process(
-    COMMAND uname -m
-    OUTPUT_VARIABLE TSAN_HOST_ARCH
-    OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
-  set(CMAKE_CROSSCOMPILING_EMULATOR "${SETARCH_EXECUTABLE};${TSAN_HOST_ARCH};-R")
+endif()
+
+if(ENABLE_VALGRIND)
+  # gtest_discover_tests prefixes CMAKE_CROSSCOMPILING_EMULATOR onto each test command, including
+  # discovery. Valgrind writes diagnostics to stderr, so gtest's stdout list stays parseable.
+  find_program(VALGRIND_EXECUTABLE valgrind REQUIRED)
+  set(CMAKE_CROSSCOMPILING_EMULATOR
+      "${VALGRIND_EXECUTABLE}"
+      "--tool=memcheck"
+      "--leak-check=full"
+      "--show-leak-kinds=definite,indirect"
+      "--errors-for-leak-kinds=definite,indirect"
+      "--track-origins=yes"
+      "--error-exitcode=1")
 endif()
 
 add_library(project_options INTERFACE)
