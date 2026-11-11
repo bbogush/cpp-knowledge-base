@@ -17,6 +17,7 @@ public:
     SharedPtr(const SharedPtr &other)
     {
         ptr = other.ptr;
+        // cppcheck-suppress copyCtorPointerCopying
         ref_count = other.ref_count;
         if (ref_count) {
             ++(*ref_count);

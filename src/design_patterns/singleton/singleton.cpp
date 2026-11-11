@@ -20,7 +20,7 @@ public:
     Singleton(Singleton &&other) = delete;
     Singleton &operator=(Singleton &&other) = delete;
 
-    void do_something() const
+    static void do_something()
     {
         std::cout << "Hello\n";
     }
@@ -32,7 +32,7 @@ private:
 
 int main()
 {
-    Singleton &singleton = Singleton::instance();
+    const Singleton &singleton = Singleton::instance();
     singleton.do_something();
 
     return 0;

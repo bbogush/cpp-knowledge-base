@@ -9,15 +9,15 @@
 // Subsystem 1
 class Player {
 public:
-    void on() const
+    static void on()
     {
         std::cout << "Player ON\n";
     }
-    void play(const std::string &movie) const
+    static void play(const std::string &movie)
     {
         std::cout << "Playing movie: " << movie << "\n";
     }
-    void off() const
+    static void off()
     {
         std::cout << "Player OFF\n";
     }
@@ -26,15 +26,15 @@ public:
 // Subsystem 2
 class SoundSystem {
 public:
-    void on() const
+    static void on()
     {
         std::cout << "Sound System ON\n";
     }
-    void set_volume(int level) const
+    static void set_volume(int level)
     {
         std::cout << "Setting volume to: " << level << "\n";
     }
-    void off() const
+    static void off()
     {
         std::cout << "Sound System OFF\n";
     }

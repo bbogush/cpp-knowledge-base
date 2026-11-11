@@ -35,9 +35,9 @@ int main()
 
     backtrack(nums, 0, subset, result);
 
-    for (const auto &subset : result) {
+    for (const auto &one_subset : result) {
         std::cout << "[ ";
-        for (int x : subset) {
+        for (int x : one_subset) {
             std::cout << x << " ";
         }
         std::cout << "]\n";

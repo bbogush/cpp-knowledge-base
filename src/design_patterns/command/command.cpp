@@ -17,11 +17,11 @@ public:
 
 class Light {
 public:
-    void on() const
+    static void on()
     {
         std::cout << "Light is ON" << '\n';
     }
-    void off() const
+    static void off()
     {
         std::cout << "Light is OFF" << '\n';
     }

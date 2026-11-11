@@ -3,6 +3,7 @@
  *  it under the terms of the Apache License Version 2.0.
  */
 
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 
@@ -86,7 +87,8 @@ public:
 int main()
 {
     std::unique_ptr<GUIFactory> factory;
-    std::string os = "Windows"; // This could be determined at runtime
+    const char *os_env = std::getenv("DEMO_OS");
+    const std::string os = os_env != nullptr ? os_env : "Windows";
 
     if (os == "Windows") {
         factory = std::make_unique<WindowsFactory>();

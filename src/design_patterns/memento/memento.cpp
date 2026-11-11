@@ -15,7 +15,7 @@ public:
     {
     }
 
-    std::string get_state() const
+    const std::string &get_state() const
     {
         return state;
     }

@@ -14,7 +14,7 @@ public:
 
 class LegacyPrinter {
 public:
-    void legacy_print(const std::string &message) const
+    static void legacy_print(const std::string &message)
     {
         std::cout << "Legacy Printer: " << message << '\n';
     }
