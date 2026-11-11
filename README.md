@@ -2,8 +2,8 @@
 
 C++ knowledge base project.
 
-**Stack:** C++20, CMake 3.20+, Ubuntu 26.04 (GCC, clang-tidy, CMake, Git, Node.js for prettier,
-shfmt)
+**Stack:** C++20, CMake 3.20+, Ubuntu 26.04 (GCC, clang-tidy, cppcheck, CMake, Git, Node.js for
+prettier, shfmt)
 
 ## Prerequisites
 
@@ -62,8 +62,9 @@ CMake is the build system. Presets are defined in `CMakePresets.json`:
 | `tsan`                    | `build/tsan`                    | ThreadSanitizer-instrumented build                              |
 | `tests-tsan`              | `build/tests-tsan`              | Inherits `tsan` with unit tests enabled                         |
 | `tests-valgrind-memcheck` | `build/tests-valgrind-memcheck` | Inherits `debug` with unit tests under Valgrind Memcheck        |
-| `tests-coverage`          | `build/tests-coverage`          | Inherits `debug` with tests and `src/` coverage instrumentation |
-| `clang-tidy`              | `build/clang-tidy`              | Inherits `debug` with static analysis on `src/`                 |
+| `tests-coverage`          | `build/tests-coverage`          | Inherits `debug` with tests and coverage instrumentation        |
+| `clang-tidy`              | `build/clang-tidy`              | Inherits `debug` with clang-tidy                                |
+| `cppcheck`                | `build/cppcheck`                | Inherits `debug` with cppcheck                                  |
 | `benchmarks`              | `build/benchmarks`              | Inherits `relwithdebinfo` with Google Benchmark targets enabled |
 
 From inside the container (or locally with CMake installed):
@@ -196,11 +197,11 @@ Static analysis uses [clang-tidy](https://clang.llvm.org/extra/clang-tidy/) with
 `.clang-tidy` config. Analysis is scoped to `src/` and uses `compile_commands.json` from the
 `clang-tidy` preset (included in the Docker image).
 
-Configure, then run the `clang-tidy-check` build preset:
+Configure, then run the `clang-tidy` build preset:
 
 ```bash
 cmake --preset clang-tidy
-cmake --build --preset clang-tidy-check
+cmake --build --preset clang-tidy
 ```
 
 Files are analyzed in parallel via `run-clang-tidy`. Job count defaults to the CPU count; set it at
@@ -208,7 +209,27 @@ configure time with `-DCLANG_TIDY_JOBS=8`:
 
 ```bash
 cmake --preset clang-tidy -DCLANG_TIDY_JOBS=8
-cmake --build --preset clang-tidy-check
+cmake --build --preset clang-tidy
+```
+
+## Cppcheck
+
+Static analysis uses [Cppcheck](https://cppcheck.sourceforge.io/). Analysis is scoped to `src/` and
+uses `compile_commands.json` from the `cppcheck` preset (included in the Docker image). Enabled
+severities are warning, style, performance, and portability. Findings fail the build.
+
+Configure, then run the `cppcheck` build preset:
+
+```bash
+cmake --preset cppcheck
+cmake --build --preset cppcheck
+```
+
+Job count defaults to the CPU count; set it at configure time with `-DCPPCHECK_JOBS=8`:
+
+```bash
+cmake --preset cppcheck -DCPPCHECK_JOBS=8
+cmake --build --preset cppcheck
 ```
 
 ## Formatting
@@ -260,7 +281,7 @@ shfmt -w script.sh
 ```
 .
 |-- CMakeLists.txt          # Root CMake project
-|-- CMakePresets.json       # Release, debug, tests, ASan, TSan, Valgrind, coverage, clang-tidy, benchmarks
+|-- CMakePresets.json       # Release, debug, tests, ASan, TSan, Valgrind, coverage, clang-tidy, cppcheck and benchmarks
 |-- src/                    # Application source
 |-- tests/                  # Google Test unit tests
 |-- benchmarks/             # Google Benchmark targets
